@@ -1,8 +1,10 @@
 # Axyra Sheets Examples
 
-Runnable Java examples for the [Axyra Sheets documentation](https://doc.keikai.io/axyra).
-The package and folder names follow the documentation sections so that readers can
-quickly find the complete program behind a snippet.
+Axyra Sheets is a server-side Java Excel library for enterprise spreadsheet processing, with modern formulas, charts, pivot tables, and PDF/image rendering. Its AI-friendly API and Axyra Agent Skill help teams build spreadsheet workflows faster.
+
+[Website](https://keikai.io/axyra) ． [Quick Start](https://doc.keikai.io/axyra/quick-start/)
+
+This repository contains runnable Java examples for the [Axyra Sheets documentation](https://doc.keikai.io/axyra). Package and folder names follow the documentation sections, making it easy to find the complete program behind each snippet.
 
 ## Requirements
 
