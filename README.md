@@ -8,27 +8,20 @@ quickly find the complete program behind a snippet.
 
 - JDK 17 or later
 - Maven 3.9 or later, or the included Maven wrapper
-- Axyra Sheets `0.1.0-SNAPSHOT` installed in your local Maven repository while
-  the SDK is under development
 
-Install the SDK from a sibling checkout:
+Maven downloads Axyra Sheets `1.0.0-Beta.FL.20261013-Eval` from
+`https://mavensync.zkoss.org/eval`, configured in `pom.xml`. The published JAR
+bundles its native libraries; no engine source checkout, local installation, or
+native-path override is required. This is an evaluation build: generated
+files carry evaluation notices (including an extra first sheet named
+"Axyra Evaluation Copy"), and one process can perform at most 100 opens, saves,
+renders, and streaming workbook creations combined.
 
-```bash
-cd ../axyra-sheets/sdk-java
-mvn install -DskipTests
-```
-
-Published Axyra Sheets jars bundle their native libraries. When using a thin jar
-built from source, build the JNI library and pass its absolute path:
+Compile the examples and run the tests before running an example:
 
 ```bash
-cd ../axyra-sheets
-cargo build -p axyra-sheets-ffi-jni
-cd ../axyra-sheets-examples
-mvn test -Daxyra.native.path=../axyra-sheets/target/debug/libaxyra_jni.dylib
+./mvnw test
 ```
-
-Use `libaxyra_jni.so` on Linux and `axyra_jni.dll` on Windows.
 
 ## Run examples
 
@@ -67,4 +60,3 @@ Run every self-contained example:
 
 Each example owns its workbook with try-with-resources. This is required because
 `Workbook` wraps native memory that must be released promptly.
-

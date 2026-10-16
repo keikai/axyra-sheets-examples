@@ -28,7 +28,7 @@ public final class ContentObjectsExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Content");
             sheet.range("A1:D4").setValues(new CellValue[][] {
                     {CellValue.text("Region"), CellValue.text("Q1"),
                             CellValue.text("Q2"), CellValue.text("Total")},

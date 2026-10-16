@@ -24,8 +24,7 @@ public final class WorkbookAndSheetExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            workbook.renameSheet(0, "Summary");
-            Sheet summary = workbook.sheet("Summary");
+            Sheet summary = workbook.createSheet("Summary");
             Sheet config = workbook.createSheet("Config");
             config.setNumber(1, 1, 0.05);
 

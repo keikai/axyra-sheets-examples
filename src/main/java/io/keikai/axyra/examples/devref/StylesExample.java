@@ -40,7 +40,7 @@ public final class StylesExample implements Example {
         CellStyle money = CellStyle.builder().numberFormat("#,##0.00;[Red](#,##0.00)").build();
 
         try (Workbook workbook = Workbook.create()) {
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Styles");
             sheet.cell(0, 0).setValue(CellValue.text("Amount"));
             sheet.setNumber(1, 0, 1234.5);
             sheet.cell(0, 0).setStyle(restored);

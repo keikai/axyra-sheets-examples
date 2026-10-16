@@ -34,10 +34,12 @@ public final class RenderingReferenceExample implements Example {
             workbook.renderPdf(outputDirectory.resolve("rendering.pdf"), pdf);
 
             ImageOptions image = ImageOptions.builder().targetWidthPx(1200).gridLines(true).build();
-            Files.write(outputDirectory.resolve("rendering.png"), workbook.renderSheetPng(0, image));
-            Files.write(outputDirectory.resolve("rendering.svg"), workbook.renderSheetSvg(0, image));
-            Files.write(outputDirectory.resolve("rendering.jpg"), Renderer.toJpeg(workbook, 0, image));
-            Files.write(outputDirectory.resolve("rendering.tiff"), Renderer.toTiff(workbook, 0, image));
+            // By name: an evaluation-mode file has an extra first sheet.
+            int sales = workbook.sheet("Q3 Sales").index();
+            Files.write(outputDirectory.resolve("rendering.png"), workbook.renderSheetPng(sales, image));
+            Files.write(outputDirectory.resolve("rendering.svg"), workbook.renderSheetSvg(sales, image));
+            Files.write(outputDirectory.resolve("rendering.jpg"), Renderer.toJpeg(workbook, sales, image));
+            Files.write(outputDirectory.resolve("rendering.tiff"), Renderer.toTiff(workbook, sales, image));
             workbook.saveHtml(outputDirectory.resolve("rendering.html"),
                     HtmlOptions.create().singleFile(true));
         }

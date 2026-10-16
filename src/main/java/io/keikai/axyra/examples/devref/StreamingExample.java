@@ -39,7 +39,7 @@ public final class StreamingExample implements Example {
         }
 
         try (Workbook workbook = Workbook.createColumnar()) {
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Columnar");
             sheet.range("A1:A1000").setNumbers(new double[1000]);
             workbook.save(outputDirectory.resolve("columnar.xlsx"));
         }

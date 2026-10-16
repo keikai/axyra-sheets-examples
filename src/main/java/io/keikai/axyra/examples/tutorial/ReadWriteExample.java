@@ -32,14 +32,15 @@ public final class ReadWriteExample implements Example {
                 System.out.println("Sheet: " + workbook.sheet(i).name());
             }
 
-            Sheet sheet = workbook.sheet("Q3 Sales");
+            Sheet sheet = workbook.sheet("Q3 Sales");   // by name, not index
             sheet.cell(2, 2).setValue(CellValue.number(1499));
             Range q1 = sheet.range("B2:B4");
             q1.setNumbers(new double[] {1200, 980, 1610});
             sheet.setColumnWidth(0, 24);
             sheet.freezePanes(1, 0);
 
-            workbook.recalculateDirty();
+            // Edits recalculate their dependents; D2:D4 are already current.
+            System.out.println("D3 after edit: " + sheet.value(2, 3));
             CellValue answer = workbook.evaluate("SUM('Q3 Sales'!B2:B4)");
             System.out.println("Q1 total: " + answer);
 

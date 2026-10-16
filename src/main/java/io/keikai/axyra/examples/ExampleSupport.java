@@ -25,10 +25,7 @@ public final class ExampleSupport {
                     {text("EMEA"), number(980), number(1100), CellValue.blank()},
                     {text("Americas"), number(1610), number(1720), CellValue.blank()}
             });
-            for (int row = 2; row <= 4; row++) {
-                sheet.cell(row - 1, 3).setFormula("B" + row + "+C" + row);
-            }
-            workbook.recalculate();
+            sheet.range("D2:D4").setFormula("B2+C2");   // D3 = B3+C3, D4 = B4+C4
             workbook.save(output);
         }
         return output;

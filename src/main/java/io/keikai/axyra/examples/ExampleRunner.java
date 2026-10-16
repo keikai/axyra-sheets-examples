@@ -8,9 +8,9 @@ import io.keikai.axyra.examples.devref.ImportExportExample;
 import io.keikai.axyra.examples.devref.LicenseAndNativeLoaderExample;
 import io.keikai.axyra.examples.devref.PivotTableExample;
 import io.keikai.axyra.examples.devref.RenderingReferenceExample;
-import io.keikai.axyra.examples.devref.SmartMarkersExample;
 import io.keikai.axyra.examples.devref.StreamingExample;
 import io.keikai.axyra.examples.devref.StylesExample;
+import io.keikai.axyra.examples.devref.TemplateMarkersExample;
 import io.keikai.axyra.examples.devref.WorkbookAndSheetExample;
 import io.keikai.axyra.examples.guides.CreateExcelFileExample;
 import io.keikai.axyra.examples.guides.ExcelToPdfExample;
@@ -45,7 +45,7 @@ public final class ExampleRunner {
             new ImportExportExample(),
             new RenderingReferenceExample(),
             new StreamingExample(),
-            new SmartMarkersExample(),
+            new TemplateMarkersExample(),
             new LicenseAndNativeLoaderExample());
 
     private ExampleRunner() {

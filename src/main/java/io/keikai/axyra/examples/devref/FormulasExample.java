@@ -23,7 +23,7 @@ public final class FormulasExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Formulas");
             workbook.setCalcMode(CalcMode.MANUAL);
             sheet.range("A2:A6").setNumbers(new double[] {3, 1, 3, 2, 1});
             sheet.cell(0, 0).setFormula("SORT(UNIQUE(A2:A6))");

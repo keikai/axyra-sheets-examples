@@ -4,6 +4,7 @@ import io.keikai.axyra.examples.Example;
 import io.keikai.axyra.examples.ExampleSupport;
 import io.keikai.axyra.sheets.Sheet;
 import io.keikai.axyra.sheets.SheetType;
+import io.keikai.axyra.sheets.Visibility;
 import io.keikai.axyra.sheets.Workbook;
 import io.keikai.axyra.sheets.io.PdfOptions;
 
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/** The complete program from "How to Convert Excel to PDF in Java". */
 public final class ExcelToPdfExample implements Example {
     @Override
     public String name() {
@@ -19,24 +21,32 @@ public final class ExcelToPdfExample implements Example {
 
     @Override
     public String description() {
-        return "Convert an Excel workbook to a fitted, bookmarked PDF";
+        return "Convert every visible worksheet to a fitted, bookmarked PDF";
     }
 
     @Override
     public void run(Path outputDirectory) {
         Path source = ExampleSupport.createSalesWorkbook(outputDirectory.resolve("pdf-source.xlsx"));
         Path target = outputDirectory.resolve("report.pdf");
-        try (Workbook workbook = Workbook.open(source)) {
+
+        try (Workbook wb = Workbook.open(source)) {
             List<String> worksheets = new ArrayList<>();
-            for (int i = 0; i < workbook.sheetCount(); i++) {
-                Sheet sheet = workbook.sheet(i);
-                if (sheet.sheetType() != SheetType.WORKSHEET) continue;
+
+            for (int i = 0; i < wb.sheetCount(); i++) {
+                Sheet sheet = wb.sheet(i);
+                // Naming a hidden sheet would render it, so skip those too.
+                if (sheet.sheetType() != SheetType.WORKSHEET
+                        || sheet.visibility() != Visibility.VISIBLE) {
+                    continue;
+                }
                 worksheets.add(sheet.name());
+
                 sheet.setLandscape(true);
-                sheet.setPaperSize(9);
+                sheet.setPaperSize(9);                 // A4
                 sheet.setPageMargins(0.5, 0.5, 0.75, 0.75, 0.3, 0.3);
-                sheet.setPrintTitleRows("$1:$1");
+                sheet.setPrintTitleRows("$1:$1");      // header on every page
             }
+
             PdfOptions options = PdfOptions.builder()
                     .title("Quarterly Report")
                     .author("Finance")
@@ -44,9 +54,12 @@ public final class ExcelToPdfExample implements Example {
                     .fitTo(PdfOptions.Fit.WIDTH)
                     .bookmarks(true)
                     .build();
-            workbook.renderPdf(target, options);
-            System.out.println("Wrote " + target);
+
+            wb.renderPdf(target, options);
+
+            String first = worksheets.get(0);
+            int pages = wb.sheetPageCount(wb.sheet(first).index());
+            System.out.println("wrote " + target + "; " + first + " is " + pages + " page(s)");
         }
     }
 }
-

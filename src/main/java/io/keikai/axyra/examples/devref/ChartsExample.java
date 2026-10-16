@@ -25,8 +25,7 @@ public final class ChartsExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            workbook.renameSheet(0, "Sales");
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Sales");
             sheet.range("A1:C4").setValues(new CellValue[][] {
                     {CellValue.text("Region"), CellValue.text("Q1"), CellValue.text("Q2")},
                     {CellValue.text("APAC"), CellValue.number(1200), CellValue.number(1450)},

@@ -25,8 +25,7 @@ public final class PivotTableExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            workbook.renameSheet(0, "Data");
-            Sheet data = workbook.sheet(0);
+            Sheet data = workbook.createSheet("Data");
             data.range("A1:E5").setValues(new CellValue[][] {
                     {text("Region"), text("Product"), text("Quarter"), text("Channel"), text("Amount")},
                     {text("APAC"), text("Widget"), text("Q1"), text("Direct"), number(1200)},

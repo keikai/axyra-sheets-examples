@@ -13,9 +13,16 @@
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axyra.version>0.1.0-SNAPSHOT</axyra.version>
+        <axyra.version>1.0.0-Beta.FL.20261013-Eval</axyra.version>
         <junit.version>5.10.2</junit.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>keikai-eval</id>
+            <url>https://mavensync.zkoss.org/eval</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -26,7 +33,8 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.22.1</version>
+            <!-- the version Axyra Sheets ${axyra.version} depends on -->
+            <version>2.22.3</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -59,4 +67,3 @@
         </plugins>
     </build>
 </project>
-

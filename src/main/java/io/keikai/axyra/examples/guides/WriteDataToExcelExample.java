@@ -1,5 +1,6 @@
 package io.keikai.axyra.examples.guides;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.keikai.axyra.examples.Example;
@@ -14,10 +15,21 @@ import io.keikai.axyra.sheets.style.CellStyle;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * The code from "How to Write Data to Excel in Java". The guide maps a JDBC
+ * {@code ResultSet} to records; this example starts from the records so that it
+ * runs without a database.
+ */
 public final class WriteDataToExcelExample implements Example {
-    public record Sale(String region, LocalDate orderDate, double amount) {
+    public record Sale(String region, String product, LocalDate orderDate, double amount) {
     }
+
+    private static final String JSON = """
+            [{"region":"Americas","product":"Widget","amount":1720.0},
+             {"region":"APAC","amount":null}]
+            """;
 
     @Override
     public String name() {
@@ -31,70 +43,105 @@ public final class WriteDataToExcelExample implements Example {
 
     @Override
     public void run(Path outputDirectory) throws Exception {
-        List<Sale> sales = List.of(
-                new Sale("APAC", LocalDate.of(2026, 9, 1), 1450),
-                new Sale("EMEA", LocalDate.of(2026, 9, 2), 1100));
+        List<Sale> rows = List.of(
+                new Sale("APAC", "Widget", LocalDate.of(2026, 9, 1), 1450),
+                new Sale("EMEA", "Gadget", LocalDate.of(2026, 9, 2), 1100));
 
-        try (Workbook workbook = Workbook.create()) {
-            Sheet sheet = workbook.createSheet("Q3 Sales");
-            CellStyle header = CellStyle.builder().bold().build();
-            sheet.importData(0, 0, sales, ImportOptions.builder()
-                    .columns("region", "orderDate", "amount")
+        try (Workbook wb = Workbook.create()) {
+            // Records: pinned columns, header row, then format the date and money columns.
+            Sheet sheet = wb.createSheet("Q3 Sales");
+            CellStyle headerStyle = CellStyle.builder().bold().build();
+            int written = sheet.importData(0, 0, rows, ImportOptions.builder()
+                    .columns("region", "product", "orderDate", "amount")
                     .headers(true)
-                    .columnLabels("Region", "Order date", "Amount")
-                    .headerStyle(header)
+                    .columnLabels("Region", "Product", "Order Date", "Amount")
+                    .headerStyle(headerStyle)
                     .build());
-            sheet.range("B2:B3").setStyle(CellStyle.builder()
-                    .numberFormat("yyyy-mm-dd").build());
+            System.out.println(written + " rows including the header");
 
-            JsonNode rows = new ObjectMapper().readTree("""
-                    [{"region":"Americas","orderDate":"2026-09-03","amount":1720.0}]
-                    """);
-            CellValue[][] jsonValues = new CellValue[rows.size()][3];
-            for (int row = 0; row < rows.size(); row++) {
-                JsonNode value = rows.get(row);
-                jsonValues[row] = new CellValue[] {
-                        CellValue.text(value.get("region").asText()),
-                        CellValue.text(value.get("orderDate").asText()),
-                        CellValue.number(value.get("amount").asDouble())
-                };
+            CellStyle dateStyle = CellStyle.builder().numberFormat("yyyy-mm-dd").build();
+            CellStyle money = CellStyle.builder().numberFormat("#,##0.00").build();
+            int lastRow = rows.size();                           // header is row 0
+            sheet.range(1, 2, lastRow, 2).setStyle(dateStyle);   // column C
+            sheet.range(1, 3, lastRow, 3).setStyle(money);       // column D
+
+            // JSON parsed into maps, imported directly.
+            ObjectMapper mapper = new ObjectMapper();
+            List<Map<String, Object>> maps = mapper.readValue(JSON,
+                    new TypeReference<List<Map<String, Object>>>() {});
+            Sheet fromMaps = wb.createSheet("JSON (maps)");
+            fromMaps.importData(0, 0, maps, ImportOptions.builder()
+                    .columns("region", "product", "amount")
+                    .columnLabels("Region", "Product", "Amount")
+                    .build());
+
+            // JSON with full control over each cell's type.
+            Sheet dynamic = wb.createSheet("JSON (dynamic)");
+            JsonNode array = mapper.readTree(JSON);
+            String[] columns = { "region", "product", "amount" };
+
+            CellValue[][] header = new CellValue[1][columns.length];
+            for (int c = 0; c < columns.length; c++) {
+                header[0][c] = CellValue.text(columns[c]);
             }
-            sheet.range(3, 0, 3 + rows.size() - 1, 2).setValues(jsonValues);
+            dynamic.range(0, 0, 0, columns.length - 1).setValues(header);
 
-            Sheet metrics = workbook.createSheet("Numeric Matrix");
-            metrics.range(0, 0, 1, 2).setNumbers(new double[] {
-                    12, 1450, 17,
-                    3, 1100, 9
-            });
-            workbook.save(outputDirectory.resolve("data-export.xlsx"));
+            CellValue[][] body = new CellValue[array.size()][columns.length];
+            for (int r = 0; r < array.size(); r++) {
+                JsonNode node = array.get(r);
+                for (int c = 0; c < columns.length; c++) {
+                    JsonNode field = node.get(columns[c]);
+                    body[r][c] = field == null || field.isNull() ? CellValue.blank()
+                            : field.isNumber() ? CellValue.number(field.asDouble())
+                            : field.isBoolean() ? CellValue.bool(field.asBoolean())
+                            : CellValue.text(field.asText());
+                }
+            }
+            dynamic.range(1, 0, array.size(), columns.length - 1).setValues(body);
+
+            // The fast path for numbers: a flat, row-major double[].
+            int rowCount = 1_000, colCount = 12;
+            double[] flat = new double[rowCount * colCount];
+            for (int i = 0; i < flat.length; i++) {
+                flat[i] = i;                                     // flat[r * colCount + c]
+            }
+            Sheet matrix = wb.createSheet("Numeric Matrix");
+            matrix.range(1, 0, rowCount, colCount - 1).setNumbers(flat);
+
+            wb.save(outputDirectory.resolve("data-export.xlsx"));
         }
 
-        writeStreamingExport(outputDirectory.resolve("streaming-export.xlsx"), sales);
+        writeStreamingExport(outputDirectory.resolve("streaming-export.xlsx"), rows);
     }
 
+    /** The streaming writer from the guide, fed from records instead of a ResultSet. */
     private static void writeStreamingExport(Path output, List<Sale> sales) {
-        try (StreamWorkbook workbook = StreamWorkbook.create(output)) {
-            int header = workbook.addStyle(StreamStyle.defaults().withBold());
-            int date = workbook.addStyle(
-                    StreamStyle.defaults().withNumberFormat("yyyy-mm-dd"));
-            int money = workbook.addStyle(
-                    StreamStyle.defaults().withNumberFormat("#,##0.00"));
+        try (StreamWorkbook out = StreamWorkbook.create(output)) {
+            int header = out.addStyle(StreamStyle.defaults().withBold());
+            int money  = out.addStyle(StreamStyle.defaults().withNumberFormat("#,##0.00"));
+            int date   = out.addStyle(StreamStyle.defaults().withNumberFormat("yyyy-mm-dd"));
 
-            workbook.startSheet("Sales");
-            workbook.row(0)
-                    .addText("Region", header)
-                    .addText("Order date", header)
-                    .addText("Amount", header)
-                    .commit();
+            out.startSheet("Sales");
 
-            for (int row = 0; row < sales.size(); row++) {
-                Sale sale = sales.get(row);
-                workbook.row(row + 1)
-                        .addText(sale.region())
-                        .addDate(sale.orderDate(), date)
-                        .addNumber(sale.amount(), money)
-                        .commit();
+            out.row(0).addText("Region", header)
+                      .addText("Order Date", header)
+                      .addText("Amount", header)
+                      .commit();
+
+            int r = 1;
+            double total = 0;
+            for (Sale sale : sales) {
+                out.row(r++)
+                   .addText(sale.region())
+                   .addDate(sale.orderDate(), date)
+                   .addNumber(sale.amount(), money)
+                   .commit();
+                total += sale.amount();
             }
+            // No recalculation in a stream: supply the cached value with the formula.
+            out.row(r).setText(0, "Total", header)
+                      .setFormula(2, "SUM(C2:C" + r + ")", total, money)
+                      .commit();
         }
     }
 }

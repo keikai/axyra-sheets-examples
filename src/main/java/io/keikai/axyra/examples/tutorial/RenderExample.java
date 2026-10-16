@@ -34,11 +34,12 @@ public final class RenderExample implements Example {
             workbook.renderPdf(outputDirectory.resolve("report.pdf"), pdf);
 
             ImageOptions image = ImageOptions.builder().scale(2).gridLines(true).build();
-            Files.write(outputDirectory.resolve("report.png"), workbook.renderSheetPng(0, image));
-            Files.write(outputDirectory.resolve("report.svg"), workbook.renderSheetSvg(0, image));
+            int sales = workbook.sheet("Q3 Sales").index();   // look the sheet up by name
+            Files.write(outputDirectory.resolve("report.png"), workbook.renderSheetPng(sales, image));
+            Files.write(outputDirectory.resolve("report.svg"), workbook.renderSheetSvg(sales, image));
             workbook.saveHtml(outputDirectory.resolve("report.html"),
                     HtmlOptions.create().singleFile(true));
-            System.out.println("Rendered " + workbook.sheetPageCount(0) + " PDF page(s)");
+            System.out.println("Q3 Sales is " + workbook.sheetPageCount(sales) + " page(s)");
         }
     }
 }

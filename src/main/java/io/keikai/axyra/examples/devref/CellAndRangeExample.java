@@ -31,7 +31,7 @@ public final class CellAndRangeExample implements Example {
     @Override
     public void run(Path outputDirectory) {
         try (Workbook workbook = Workbook.create()) {
-            Sheet sheet = workbook.sheet(0);
+            Sheet sheet = workbook.createSheet("Sales");
             CellStyle bold = CellStyle.builder().bold().build();
             sheet.importData(0, 0, List.of(
                             new Sale("EMEA", 980, 1100),

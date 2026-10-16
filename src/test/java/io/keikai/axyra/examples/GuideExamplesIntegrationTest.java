@@ -1,7 +1,6 @@
 package io.keikai.axyra.examples;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
@@ -29,7 +28,6 @@ class GuideExamplesIntegrationTest {
                     "data-export.xlsx", "streaming-export.xlsx"));
 
     @Test
-    @EnabledIfSystemProperty(named = "axyra.native.path", matches = ".+")
     void runsEveryGuideExample(@TempDir Path output) throws Exception {
         List<Example> guides = ExampleRunner.examples().stream()
                 .filter(example -> example.name().startsWith("guides/"))
