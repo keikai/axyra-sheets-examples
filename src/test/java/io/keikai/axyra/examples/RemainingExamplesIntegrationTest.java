@@ -14,6 +14,7 @@ class RemainingExamplesIntegrationTest {
     void runsEveryTutorialAndDeveloperReferenceExample(@TempDir Path output) throws Exception {
         List<Example> examples = ExampleRunner.examples().stream()
                 .filter(example -> !example.name().startsWith("guides/"))
+                .filter(example -> !example.name().startsWith("feature-demo/"))
                 .filter(example -> !example.name().equals("tutorial/quick-start"))
                 .toList();
 

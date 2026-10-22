@@ -12,6 +12,26 @@ import io.keikai.axyra.examples.devref.StreamingExample;
 import io.keikai.axyra.examples.devref.StylesExample;
 import io.keikai.axyra.examples.devref.TemplateMarkersExample;
 import io.keikai.axyra.examples.devref.WorkbookAndSheetExample;
+import io.keikai.axyra.examples.featuredemo.BulkRangeExample;
+import io.keikai.axyra.examples.featuredemo.CellReadWriteExample;
+import io.keikai.axyra.examples.featuredemo.CellStylingExample;
+import io.keikai.axyra.examples.featuredemo.ConditionalFormatExample;
+import io.keikai.axyra.examples.featuredemo.CreateTableExample;
+import io.keikai.axyra.examples.featuredemo.CreateWorkbookExample;
+import io.keikai.axyra.examples.featuredemo.DataValidationExample;
+import io.keikai.axyra.examples.featuredemo.ExportPdfExample;
+import io.keikai.axyra.examples.featuredemo.FindReplaceExample;
+import io.keikai.axyra.examples.featuredemo.FormulasRecalculationExample;
+import io.keikai.axyra.examples.featuredemo.ImportObjectsExample;
+import io.keikai.axyra.examples.featuredemo.InsertChartExample;
+import io.keikai.axyra.examples.featuredemo.ManageWorksheetsExample;
+import io.keikai.axyra.examples.featuredemo.MergeFreezeExample;
+import io.keikai.axyra.examples.featuredemo.NumberFormatsExample;
+import io.keikai.axyra.examples.featuredemo.OpenWorkbookExample;
+import io.keikai.axyra.examples.featuredemo.RenderImageExample;
+import io.keikai.axyra.examples.featuredemo.RowsColumnsExample;
+import io.keikai.axyra.examples.featuredemo.SaveExportExample;
+import io.keikai.axyra.examples.featuredemo.SortFilterExample;
 import io.keikai.axyra.examples.guides.CreateExcelFileExample;
 import io.keikai.axyra.examples.guides.ExcelToPdfExample;
 import io.keikai.axyra.examples.guides.GenerateReportExample;
@@ -24,9 +44,10 @@ import io.keikai.axyra.examples.tutorial.RenderExample;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class ExampleRunner {
-    private static final List<Example> EXAMPLES = List.of(
+    private static final List<Example> DOCUMENTATION_EXAMPLES = List.of(
             new QuickStartExample(),
             new ReadWriteExample(),
             new RenderExample(),
@@ -48,6 +69,37 @@ public final class ExampleRunner {
             new TemplateMarkersExample(),
             new LicenseAndNativeLoaderExample());
 
+    /**
+     * Runnable counterparts of the feature demos on the Axyra demo site. They are run one
+     * at a time rather than by {@code all}: together they open, save and render more than
+     * the evaluation build allows in one process (100 operations).
+     */
+    private static final List<Example> FEATURE_DEMOS = List.of(
+            new CreateWorkbookExample(),
+            new OpenWorkbookExample(),
+            new SaveExportExample(),
+            new ManageWorksheetsExample(),
+            new CellReadWriteExample(),
+            new BulkRangeExample(),
+            new FormulasRecalculationExample(),
+            new ImportObjectsExample(),
+            new CellStylingExample(),
+            new NumberFormatsExample(),
+            new RowsColumnsExample(),
+            new MergeFreezeExample(),
+            new FindReplaceExample(),
+            new SortFilterExample(),
+            new DataValidationExample(),
+            new ConditionalFormatExample(),
+            new CreateTableExample(),
+            new InsertChartExample(),
+            new ExportPdfExample(),
+            new RenderImageExample());
+
+    private static final List<Example> EXAMPLES = Stream
+            .concat(DOCUMENTATION_EXAMPLES.stream(), FEATURE_DEMOS.stream())
+            .toList();
+
     private ExampleRunner() {
     }
 
@@ -60,7 +112,7 @@ public final class ExampleRunner {
         Path output = ExampleSupport.prepareOutputDirectory(
                 args.length > 1 ? Path.of(args[1]) : Path.of("output"));
         if ("all".equals(args[0])) {
-            for (Example example : EXAMPLES) run(example, output);
+            for (Example example : DOCUMENTATION_EXAMPLES) run(example, output);
             return;
         }
 
