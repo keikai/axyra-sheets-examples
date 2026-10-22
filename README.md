@@ -11,15 +11,9 @@ This repository contains runnable Java examples for the [Axyra Sheets documentat
 - JDK 17 or later
 - Maven 3.9 or later, or the included Maven wrapper
 
-Maven downloads Axyra Sheets `1.0.0-Beta.FL.20261013-Eval` from
-`https://mavensync.zkoss.org/eval`, configured in `pom.xml`. The published JAR
-bundles its native libraries; no engine source checkout, local installation, or
-native-path override is required. This is an evaluation build: generated
-files carry evaluation notices (including an extra first sheet named
-"Axyra Evaluation Copy"), and one process can perform at most 100 opens, saves,
-renders, and streaming workbook creations combined.
+Maven automatically downloads Axyra Sheets and its required native libraries as configured in pom.xml. The included [evaluation version](https://doc.keikai.io/axyra/dev-ref/License) adds evaluation notices to generated files.
 
-Compile the examples and run the tests before running an example:
+Build and test the examples:
 
 ```bash
 ./mvnw test
@@ -60,5 +54,4 @@ Run every self-contained example:
 | Guide: Generate Reports | `guides/generate-report` | `examples.guides` |
 | Developer Reference | `dev-ref/*` | `examples.devref` |
 
-Each example owns its workbook with try-with-resources. This is required because
-`Workbook` wraps native memory that must be released promptly.
+Use try-with-resources to close each `Workbook` and release its native resources, as shown in the examples.
