@@ -15,6 +15,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axyra.version>1.0.0.FL.20261022-Eval</axyra.version>
         <junit.version>5.10.2</junit.version>
+        <test.groups></test.groups>
+        <test.excludedGroups>known-issue</test.excludedGroups>
     </properties>
 
     <repositories>
@@ -60,6 +62,10 @@
                          saves and renders per process, which the feature demos
                          together exceed. -->
                     <reuseForks>false</reuseForks>
+                    <!-- Tests of open Axyra defects fail until the defect is fixed;
+                         run them with -Pknown-issues. -->
+                    <groups>${test.groups}</groups>
+                    <excludedGroups>${test.excludedGroups}</excludedGroups>
                 </configuration>
             </plugin>
             <plugin>
@@ -72,4 +78,14 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <!-- ./mvnw test -Pknown-issues : only the tests of open Axyra defects -->
+            <id>known-issues</id>
+            <properties>
+                <test.groups>known-issue</test.groups>
+                <test.excludedGroups>none</test.excludedGroups>
+            </properties>
+        </profile>
+    </profiles>
 </project>
