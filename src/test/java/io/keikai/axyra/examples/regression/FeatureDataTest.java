@@ -54,8 +54,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * Features F36-F52 of the axyra-sheets skill test (CSV, imports, streaming, templates, functions,
  * document properties, calculation, formula notation, named styles and themes, data tools, save
- * formats, signatures, slicers, form controls, split and combine). F47 (licence API) is covered by
- * {@link LicenseFallbackTest}, which needs its own JVM.
+ * formats, signatures, slicers, form controls, split and combine). F47 (licence API) is not tested
+ * here: it changes the licence state, which the whole process shares.
  */
 class FeatureDataTest {
 

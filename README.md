@@ -21,9 +21,9 @@ Build and test the examples:
 
 Besides the examples, `src/test/java/io/keikai/axyra/examples/regression` checks the library
 itself: one test per feature (`Feature*Test`), the behaviours the documentation states
-(`DocumentedBehaviourTest`) and defects fixed in earlier builds (`FixedIssuesTest`). Tests of
-defects that are still open are tagged `known-issue` and left out of `./mvnw test`; they fail until
-the defect is fixed. Run only those with:
+(`DocumentedBehaviourTest`) and defects fixed in earlier builds (`FixedIssuesTest`). A test of a
+defect that is still open is tagged `known-issue` and left out of `./mvnw test`, since it fails until
+the defect is fixed; none is open in the build this project uses. Run only those with:
 
 ```bash
 ./mvnw test -Pknown-issues

@@ -13,7 +13,7 @@
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axyra.version>1.0.0.FL.20261022-Eval</axyra.version>
+        <axyra.version>1.0.0-Beta-Eval</axyra.version>
         <junit.version>5.10.2</junit.version>
         <test.groups></test.groups>
         <test.excludedGroups>known-issue</test.excludedGroups>
