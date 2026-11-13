@@ -1,0 +1,3 @@
+PASS: text IDs 00042/00043; numeric amounts 1250/80; bold headers
+PASS: C4 formula SUM(C2:C3); numeric total 1330; displayed total 1,330.00
+PASS: edit C2 to 1500; saved and reopened total 1580; empty-list total 0

@@ -1,0 +1,3 @@
+Use Axyra Sheets to read the Sales worksheet in input/sales.xlsx into Java
+order records. Preserve IDs like 00042, skip blank rows, and show the orders
+and the workbook total. Build and run it, then check against the workbook.

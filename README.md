@@ -78,6 +78,38 @@ the wrapper as `.\mvnw`:
 In Command Prompt (`cmd.exe`), the bash form works with `.\mvnw` in place of
 `./mvnw`, for example `.\mvnw exec:java -Dexec.args="tutorial/quick-start"`.
 
+## Standalone guide projects
+
+The complete article downloads are maintained in [guide-projects/](guide-projects/),
+with their own POMs, sample inputs, saved outputs, and verification records:
+
+- [Read / Write Excel](guide-projects/axyra-read-write/README.txt): the two landing
+  guides, short-prompt AI coding runs, and reproducible expected/actual checks.
+- [Group 5](guide-projects/axyra-group5/README.md): formulas, charts, and formatting.
+- [Group 6](guide-projects/axyra-group6/README.md): template reports and POI migration;
+  each workflow has its own Maven project.
+
+Run these from the project directory so relative input/output paths resolve:
+
+```bash
+cd guide-projects/axyra-read-write
+mvn -q compile exec:java -Dexec.mainClass=SimpleSkillReader
+mvn -q exec:java -Dexec.mainClass=SimpleSkillWriter
+mvn -q exec:java -Dexec.mainClass=VerifySimpleSkill
+```
+
+The existing root-level runner and tests remain separate from these standalone
+projects. To refresh the guide download ZIPs in a sibling documentation checkout:
+
+```bash
+python3 ../doc/scripts/package-axyra-guide-examples.py
+```
+
+Run that packaging command from this repository root. It reads `guide-projects/`
+and writes the read/write ZIP to the docs download directory and Group 5/6 ZIPs
+to their draft directories. Use `--groups axyra-read-write` for only that download;
+`--examples-root` accepts a different guide-project directory.
+
 ## Documentation mapping
 
 | Documentation section | Example name | Source package |

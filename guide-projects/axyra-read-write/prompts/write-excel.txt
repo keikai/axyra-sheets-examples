@@ -1,0 +1,4 @@
+Use Axyra Sheets to export these orders to output/ai-sales-simple.xlsx:
+(00042, Laptop, 1250), (00043, Mouse, 80). Keep IDs as text, format amounts
+to two decimals, add bold headers and a SUM total. Build and run it,
+then reopen and check the workbook.

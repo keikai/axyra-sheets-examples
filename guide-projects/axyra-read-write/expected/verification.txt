@@ -1,0 +1,12 @@
+Observed on Java 17 with Axyra Sheets 1.0.0-Beta-Eval, 13 November 2026.
+Command: mvn -q compile exec:java -Dexec.mainClass=VerifyExamples
+
+This is an evaluation copy of Axyra. To obtain a license, visit keikai.io.
+PASS: text IDs, numeric amounts, bold headers, number formats,
+stored SUM formula, saved total 1330, edit/reopen total 1580,
+byte/stream input, dates, JSON records, empty sheets, error values,
+synthetic JDBC mapping, and missing JDBC amount rejection.
+Scope: this sample and listed recipes; not a benchmark or all-workbook guarantee.
+
+The JDBC mapping check uses a synthetic CachedRowSet, not a database connection.
+The raw and updated workbooks preserve evaluation notices.

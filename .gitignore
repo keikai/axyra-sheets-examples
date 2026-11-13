@@ -4,3 +4,6 @@ output/
 *.iml
 .DS_Store
 
+
+# Generated files at the standalone read/write project root
+/guide-projects/axyra-read-write/*.xlsx

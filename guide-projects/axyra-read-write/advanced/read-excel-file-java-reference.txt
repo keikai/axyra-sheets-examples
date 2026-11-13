@@ -1,0 +1,445 @@
+Advanced recipe notes retained from the longer guide.
+Code fragments need their stated context; complete runnable classes are in src/main/java/.
+
+Need to read an Excel file in Java? With Axyra Sheets, open the `.xlsx` file, choose a worksheet, and read a range of cells in one call:
+
+```java
+try (Workbook wb = Workbook.open(Path.of("input/sales.xlsx"))) {
+    Sheet sheet = wb.sheet("Sales");
+    CellValue[][] rows = sheet.range("A1:C4").values();
+    // Process rows in Java: rows[0] is the header row.
+}
+```
+
+This is the core of the solution. `values()` reads the block at once, rather than making a separate API call for every cell. The returned `CellValue` objects distinguish text, numbers, blanks, and errors. Add imports for `Workbook`, `Sheet`, `CellValue`, and `java.nio.file.Path` (included in the complete example below).
+
+**What you get from the sample workbook:**
+
+```text
+Order ID   Product   Amount
+00042      Laptop    1250.0
+00043      Mouse     80.0
+Total                1330.0
+```
+
+The order ID `00042` stays text, and the total is read as a number. The sample uses a known range (`A1:C4`); for other layouts, see [finding your data](#adapt).
+
+[Download the runnable Java project and sample XLSX](https://doc.keikai.io/assets/downloads/axyra-read-write-examples.zip) | [Run it](#setup) | [Adapt it with AI](#ai)
+
+## Run the example in your project
+{: #setup}
+
+**Requirements:** Java 17+, Maven, and the Axyra Sheets evaluation library. You do not need Microsoft Excel. The downloadable project contains a `pom.xml`, source code, `input/sales.xlsx`, and reference results.
+
+You can try the sample without a license key. Evaluation output includes notices; production use requires a commercial license. See [licensing and evaluation](https://doc.keikai.io/axyra/dev-ref/License) for the shared 100-operation process limit and production configuration.
+
+Unzip the project, open a terminal in `axyra-read-write`, and run:
+
+```shell
+mvn -q compile exec:java -Dexec.mainClass=ReadExcelFile
+```
+
+To read a different workbook with the same layout, pass its path:
+
+```shell
+mvn -q compile exec:java -Dexec.mainClass=ReadExcelFile -Dexec.args="/path/to/file.xlsx"
+```
+
+Already have a Maven application? Add the evaluation repository and Axyra dependency:
+
+```xml
+<repositories>
+  <repository>
+    <id>keikai-eval</id>
+    <url>https://mavensync.zkoss.org/eval</url>
+  </repository>
+</repositories>
+<dependencies>
+  <dependency>
+    <groupId>io.keikai</groupId>
+    <artifactId>axyra-sheets</artifactId>
+    <version>1.0.0-Beta-Eval</version>
+  </dependency>
+</dependencies>
+```
+
+[Gradle setup and supported platforms](https://doc.keikai.io/axyra/dev-ref/Installation)
+
+## Complete runnable example
+
+The short snippet reads the values. This version also prints each cell and handles different cell types without assuming every value is a string:
+
+```java
+import io.keikai.axyra.sheets.CellValue;
+import io.keikai.axyra.sheets.Sheet;
+import io.keikai.axyra.sheets.Workbook;
+import java.nio.file.Path;
+
+public final class ReadExcelFile {
+    public static void main(String[] args) {
+        Path input = Path.of(args.length == 0 ? "input/sales.xlsx" : args[0]);
+        try (Workbook wb = Workbook.open(input)) {
+            Sheet sheet = wb.sheet("Sales");
+            for (CellValue[] row : sheet.range("A1:C4").values()) {
+                System.out.printf("%s\t%s\t%s%n",
+                        text(row[0]), text(row[1]), text(row[2]));
+            }
+        }
+    }
+
+    private static String text(CellValue value) {
+        if (value instanceof CellValue.Text t) return t.value();
+        if (value instanceof CellValue.Number n) return String.valueOf(n.value());
+        if (value instanceof CellValue.Bool b) return String.valueOf(b.value());
+        if (value instanceof CellValue.Error e) return e.display();
+        if (value instanceof CellValue.Array) return "[array]";
+        return "";
+    }
+}
+```
+
+The example prints an Excel error such as `#DIV/0!` instead of silently treating it as zero. Real imports should validate required columns and values before storing the data.
+
+## Let an AI coding assistant adapt the example
+{: #ai}
+
+If your workbook has different sheets, columns, or formulas, you do not need to rewrite the example from scratch. Install the [Axyra Agent Skill](https://doc.keikai.io/axyra/dev-ref/AI_Assisted_Development) in a supported coding assistant:
+
+```shell
+npx skills add https://github.com/keikai/doc/tree/master/skills/axyra-sheets
+```
+
+Open the downloaded project and try this prompt (replace the file name and fields for your own case):
+
+```text
+Use the Axyra Sheets skill in this Java 17 Maven project.
+Read input/sales.xlsx, sheet Sales, range A1:C4.
+Extract Order ID as text (preserve 00042), Product as text,
+and Amount as a number. Print the rows and handle blank/error cells.
+Compile and run the program. Show the actual output and any errors.
+```
+
+**Reference result from the bundled example:** `00042` was preserved as text and the total read as `1330`. The download includes the reference implementation and checked results. AI-generated code still needs to be compiled and verified against *your* workbook; the Agent Skill assists development and is not required at runtime.
+
+### Beyond reading: update the same Excel file
+
+Reading the data may be only the first step. Axyra can also change a cell, recalculate a dependent formula, and save the workbook using the same API. The bundled verification example changes the amount from `1250` to `1500` and checks that the total becomes `1580` after saving and reopening.
+
+[See how to write an Excel file in Java](https://doc.keikai.io/axyra/guides/write-data-to-excel-java) | [Download sample workbook, Java code, and checked results](https://doc.keikai.io/assets/downloads/axyra-read-write-examples.zip)
+
+
+## Adapt this to your Excel file
+{: #adapt}
+
+When using your own file, change `"Sales"` to your worksheet name and `"A1:C4"` to the range containing your data, as well as updating the file path. Keep all `Sheet` and `Range` access inside the open workbook; return extracted Java data from your method.
+
+The example above is enough for a known sheet and range. Use the following sections when you need uploads, unknown layouts, dates, formula handling, or more control over extraction.
+
+## Step 1 — Open the workbook
+
+The format is detected from the file name, so one call covers every supported
+format.
+
+```java
+import io.keikai.axyra.sheets.Workbook;
+import java.nio.file.Path;
+
+try (Workbook wb = Workbook.open(Path.of("report.xlsx"))) {
+    // ...
+}
+```
+
+When the file arrives over HTTP or comes out of a database there is no name to
+infer from, so state the format explicitly:
+
+```java
+byte[] bytes = ...;
+try (Workbook wb = Workbook.openBytes(bytes, "xlsx")) { ... }
+
+try (var in = request.getInputStream();
+     Workbook wb = Workbook.open(in, "xlsx")) { ... }
+```
+
+Encrypted workbooks take a password on the same call:
+
+```java
+Workbook wb = Workbook.open(Path.of("secret.xlsx"), "pa55w0rd");
+Workbook fromMemory = Workbook.openBytes(bytes, "xlsx", "pa55w0rd");
+```
+
+{: .notice--warning}
+**Always close the workbook.** It owns native memory outside the JVM heap that
+the garbage collector cannot reclaim, and `Sheet`, `Range`, and `Cell` are views
+that become invalid the moment it closes. Do not return one from the method that
+opened it.
+
+## Step 2 — Walk the sheets
+
+```java
+import io.keikai.axyra.sheets.Sheet;
+
+for (int i = 0; i < wb.sheetCount(); i++) {
+    Sheet sheet = wb.sheet(i);
+    System.out.println(i + ": " + sheet.name() + " (" + sheet.sheetType() + ")");
+}
+
+Sheet byName = wb.sheet("Q3 Sales");
+```
+
+Prefer looking a sheet up by name over a fixed index. A file saved by Axyra Sheets
+in Evaluation Mode starts with an extra **Axyra Evaluation Copy** sheet, which
+shifts every index by one.
+
+`sheetType()` matters when you are iterating blindly: a workbook can contain
+chart sheets, dialog sheets, and macro sheets, and only `WORKSHEET` holds a
+grid. Hidden sheets are included in the count — check
+`sheet.visibility()` if you want to skip them.
+
+## Step 3 — Find where the data is
+
+Do not guess the extent. `usedRange()` returns the populated block, or `null`
+for an empty sheet.
+
+```java
+import io.keikai.axyra.sheets.Range;
+
+Range used = sheet.usedRange();
+if (used == null) {
+    return;   // nothing on this sheet
+}
+System.out.printf("data in rows %d-%d, cols %d-%d (%d x %d)%n",
+        used.firstRow(), used.lastRow(),
+        used.firstColumn(), used.lastColumn(),
+        used.rowCount(), used.colCount());
+```
+
+Remember that these indices are **0-based**, so `firstRow() == 0` is spreadsheet
+row 1.
+
+## Step 4 — Read the Excel values in bulk
+
+Read a block with `Range.values()` to reduce the JNI overhead of repeated
+per-cell calls. The practical benefit depends on your workbook and workload;
+measure with representative data when performance matters.
+
+```java
+import io.keikai.axyra.sheets.CellValue;
+
+CellValue[][] grid = used.values();      // row-major
+for (CellValue[] row : grid) {
+    for (CellValue v : row) {
+        // ...
+    }
+}
+```
+
+For an all-numeric block, `numbers()` returns a flat, row-major `double[]`
+without allocating a `CellValue` for each number:
+
+```java
+double[] flat = sheet.range("B2:D10000").numbers();
+```
+
+To read the formulas rather than their results:
+
+```java
+String[][] formulas = used.formulas();   // null entries where there is no formula
+```
+
+## Step 5 — Handle each value type
+
+`CellValue` is a sealed interface with exactly six variants, so `instanceof`
+patterns cover the space:
+
+```java
+static String describe(CellValue v) {
+    if (v instanceof CellValue.Number n) return "number " + n.value();
+    if (v instanceof CellValue.Text t)   return "text " + t.value();
+    if (v instanceof CellValue.Bool b)   return "bool " + b.value();
+    if (v instanceof CellValue.Error e)  return "error " + e.display();  // "#DIV/0!"
+    if (v instanceof CellValue.Array a)  return a.rowCount() + "x" + a.colCount() + " array";
+    return "(blank)";
+}
+```
+
+{: .notice--info}
+**On Java 21 or later** you can switch over the variants instead
+(`case CellValue.Number n -> ...`) and let the compiler prove exhaustiveness.
+The Java library targets Java 17, where pattern matching for `switch` is not yet
+available, so the samples here use `instanceof`.
+
+If you want what a spreadsheet application would *show* — the number format
+applied, so `1499` becomes `$1,499.00` — read the formatted text instead of the
+raw value:
+
+```java
+String shown = sheet.cell(4, 2).formattedText();
+```
+
+That is a per-cell call, so use it for display, not for bulk extraction.
+
+## Step 6 — Formula results and error cells
+
+A formula cell carries the value the writing application cached, so reading it
+usually needs no work on your part. Your own edits recalculate the formulas that
+depend on them, but formulas you have not touched keep the cached result.
+Recalculate once when you do not trust that cache — a file written by another
+tool, or one with volatile functions such as `NOW()`:
+
+```java
+wb.recalculate();        // the whole workbook; call it once, not per cell
+```
+
+{: .notice--info}
+**A formula error is a value, not an exception.** `#DIV/0!` arrives as
+`CellValue.Error`, and `AxyraFormulaException` is reserved for a malformed
+*request* — a formula string that will not parse. So a sheet full of `#REF!`
+reads cleanly; you decide what to do about it.
+
+```java
+if (v instanceof CellValue.Error e) {
+    log.warn("cell holds {} (ERROR.TYPE {})", e.display(), e.code());
+}
+```
+
+You can also evaluate an expression against the open workbook without writing it
+anywhere:
+
+```java
+CellValue total = wb.evaluate("SUM('Q3 Sales'!B2:B100)");
+```
+
+## Step 7 — Dates
+
+Spreadsheets store dates as serial numbers, so a date cell reads back as
+`CellValue.Number`. Convert through the cell:
+
+```java
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+LocalDate d = sheet.cell(1, 0).dateValue();
+LocalDateTime dt = sheet.cell(1, 1).dateTimeValue();
+```
+
+Which epoch the serial refers to depends on the workbook's `date1904` flag,
+which the conversion already accounts for — see
+[Cells and Ranges](https://doc.keikai.io/axyra/dev-ref/Cell_and_Range#dates).
+
+## The complete program to read an Excel file in Java
+
+For an unknown workbook layout, `ReadAllWorksheets.java` in the download lists every worksheet and prints its used range as TSV. The earlier `ReadExcelFile.java` reads just the sample's business region.
+
+```java
+import io.keikai.axyra.sheets.CellValue;
+import io.keikai.axyra.sheets.Range;
+import io.keikai.axyra.sheets.Sheet;
+import io.keikai.axyra.sheets.SheetType;
+import io.keikai.axyra.sheets.Workbook;
+import java.nio.file.Path;
+
+public final class ReadAllWorksheets {
+    public static void main(String[] args) {
+        Path input = Path.of(args.length == 0 ? "input/sales.xlsx" : args[0]);
+        try (Workbook wb = Workbook.open(input)) {
+            for (int i = 0; i < wb.sheetCount(); i++) {
+                Sheet sheet = wb.sheet(i);
+                if (sheet.sheetType() != SheetType.WORKSHEET) continue;
+                Range used = sheet.usedRange();
+                if (used == null) {
+                    System.out.println("== " + sheet.name() + " (empty)");
+                    continue;
+                }
+                System.out.printf("== %s  rows %d-%d, cols %d-%d%n",
+                        sheet.name(), used.firstRow(), used.lastRow(),
+                        used.firstColumn(), used.lastColumn());
+                for (CellValue[] row : used.values()) {
+                    System.out.println(toTsv(row));
+                }
+            }
+        }
+    }
+
+    public static String toTsv(CellValue[] row) {
+        StringBuilder line = new StringBuilder();
+        for (int c = 0; c < row.length; c++) {
+            if (c > 0) line.append('\t');
+            // Keep one output field per cell, including leading blanks.
+            line.append(text(row[c]).replace('\t', ' ')
+                    .replace('\r', ' ').replace('\n', ' '));
+        }
+        return line.toString();
+    }
+
+    private static String text(CellValue value) {
+        if (value instanceof CellValue.Number n) return String.valueOf(n.value());
+        if (value instanceof CellValue.Text t) return t.value();
+        if (value instanceof CellValue.Bool b) return String.valueOf(b.value());
+        if (value instanceof CellValue.Error e) return e.display();
+        if (value instanceof CellValue.Array) return "[array]";
+        return "";
+    }
+}
+```
+
+The TSV writer chooses separators by column index, so leading, middle, and trailing blank fields keep their positions. For this diagnostic output, tabs and line breaks within cell text are replaced with spaces. Use a dedicated delimited-text writer if you must preserve those characters exactly. Evaluation tabs and notice rows are included in the all-worksheets output; identify business regions before importing records.
+
+Run the general reader with:
+
+```shell
+mvn -q compile exec:java -Dexec.mainClass=ReadAllWorksheets
+```
+
+## Common mistakes when reading Excel files in Java
+
+| Symptom | Cause |
+|---|---|
+| Reading is unbearably slow | Repeated per-cell calls can add overhead. Read blocks with `Range.values()` or `numbers()` and profile your workload. |
+| Everything is off by one row | Indices are 0-based; spreadsheet row 1 is index `0`. |
+| `IllegalStateException` from a `Sheet` or `Range` | The workbook was closed. Views do not outlive it — extract what you need before closing. |
+| A date reads as `50000.0` | That is the serial number. Use `cell.dateValue()` / `dateTimeValue()`. |
+| A currency cell reads as `1499.0`, not `$1,499.00` | `values()` gives raw values. `formattedText()` applies the number format. |
+| Formula cells look stale | You are seeing the cache the writing tool left. Call `recalculate()`. |
+| Iterating sheets hits something with no grid | Chart, dialog, and macro sheets are sheets too. Filter on `sheetType()`. |
+
+## Frequently asked questions
+
+### How do I read an Excel file in Java?
+
+Open it in try-with-resources, select a worksheet, and read its range with
+`values()`. Start with the complete sample above; use `usedRange()` when the
+extent is unknown and handle its empty-sheet result.
+
+### How do I read an XLSX file in Java from an upload or a database?
+
+When there is no file name to detect the format from, pass the format
+explicitly. Use `Workbook.openBytes(bytes, "xlsx")` for a byte array or
+`Workbook.open(in, "xlsx")` for an `InputStream`, such as the body of an HTTP
+request.
+
+### Why is my Java code slow when reading an Excel file?
+
+The usual cause is reading one cell at a time with `sheet.value(r, c)`, which
+crosses the JNI boundary once per cell. Reading the whole block with
+`Range.values()`, or with `numbers()` for numeric data, crosses it once.
+
+### How do I read dates from an Excel file in Java?
+
+Excel stores dates as serial numbers, so a date cell reads back as
+`CellValue.Number`. Call `cell.dateValue()` or `cell.dateTimeValue()` to get a
+`LocalDate` or `LocalDateTime`. The conversion accounts for the workbook's
+`date1904` flag.
+
+### When I read a formula cell, do I get the formula or the result?
+
+`values()` returns the result that the writing application cached, and
+`formulas()` returns the formula strings. If you do not trust the cached
+results, call `wb.recalculate()` before reading.
+
+## Next steps
+
+- [How to Convert Excel to PDF in Java](https://doc.keikai.io/axyra/guides/convert-excel-to-pdf-java) —
+  render what you just opened
+- [Cells and Ranges](https://doc.keikai.io/axyra/dev-ref/Cell_and_Range) — the full data-access API
+- [Supported Formats](https://doc.keikai.io/axyra/dev-ref/Supported_Formats) — per-format behavior and limits
+- [Formulas](https://doc.keikai.io/axyra/dev-ref/Formulas) — evaluation, arrays, error semantics

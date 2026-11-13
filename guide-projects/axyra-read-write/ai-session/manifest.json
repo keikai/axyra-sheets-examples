@@ -1,0 +1,83 @@
+{
+  "assistant": "Codex in the active revision session",
+  "context": "Existing guides, sample project and Axyra Sheets skill were available; not a blind or timed trial.",
+  "library": "io.keikai:axyra-sheets:1.0.0-Beta-Eval",
+  "artifacts": {
+    "ai-session/read-prompt.txt": "a38500df06f6825b7a469e046434f448e637d5d4b4194dfa07535e612b5b2e70",
+    "ai-session/write-prompt.txt": "dd1c76829f5c846fcabf09418f326fcea446c8dc3662dfce26eb973e095955ae",
+    "ai-session/SESSION.txt": "4bbead229dca98b4b6ee36d1e783bf170b94a86e8e04e33ce7d081495841f454",
+    "src/main/java/SkillReadSales.java": "08856636b68c7480844ec8a32cd153e57c812b4a1d77475b1415f7e79a291e02",
+    "src/main/java/SkillWriteSales.java": "46b50b0e03a45735c3818ec353805ee65a07aafff0be7b7ebab68ed55334be0b",
+    "src/main/java/VerifySkillSession.java": "3c98544bb97bd30b8bb06c15d6eb94dbc3d606425a3686125072a1fb49e6a0df",
+    "ai-session/read-stdout.txt": "6dffba5c00335772cefed3f942073ce5d301b1f9031e227d1dde89263b92c05c",
+    "ai-session/read-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9",
+    "ai-session/write-stdout.txt": "37c843137aa57c88925e1f364a0cd79f3fe05026882216cd9832f703c0f50f8f",
+    "ai-session/write-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9",
+    "ai-session/verify-stdout.txt": "c4e3074b3e61010683b4b8e608013f93fd01e11f6b9b00a259711fa0621c2172",
+    "ai-session/verify-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9"
+  },
+  "runs": [
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "compile"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session/compile-stdout.txt",
+      "stderr": "ai-session/compile-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=SkillReadSales"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session/read-stdout.txt",
+      "stderr": "ai-session/read-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=SkillWriteSales"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session/write-stdout.txt",
+      "stderr": "ai-session/write-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=VerifySkillSession"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session/verify-stdout.txt",
+      "stderr": "ai-session/verify-stderr.txt"
+    }
+  ],
+  "skill": {
+    "name": "axyra-sheets",
+    "sha256": "a426f45e1e5e296fa46ed5604120adfc65251c1cedc003e1ddfe9ef54b182965",
+    "context": "Installed skill read in this session; no independent blind comparison claimed."
+  },
+  "extension": {
+    "source": "src/main/java/UpdateSalesReport.java",
+    "command": [
+      "mvn",
+      "-q",
+      "compile",
+      "exec:java",
+      "-Dexec.mainClass=UpdateSalesReport"
+    ],
+    "exit_code": 0,
+    "stdout": "ai-session/update-stdout.txt",
+    "stderr": "ai-session/update-stderr.txt",
+    "checked_saved_total": 1580
+  }
+}

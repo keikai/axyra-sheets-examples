@@ -1,0 +1,4 @@
+{
+  "input" : [ [ "Order ID", "Product", "Amount" ], [ "00042", "Laptop", "1,250.00" ], [ "00043", "Mouse", "80.00" ], [ "Total", "", "1,330.00" ] ],
+  "output" : [ [ "Order ID", "Product", "Amount" ], [ "00042", "Laptop", "1,250.00" ], [ "00043", "Mouse", "80.00" ], [ "Total", "", "1,330.00" ] ]
+}

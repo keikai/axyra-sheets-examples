@@ -1,0 +1,74 @@
+{
+  "assistant": "Codex in the active guide-review conversation",
+  "context_file": "ai-session-simple/CONTEXT.txt",
+  "java": "17",
+  "library": "io.keikai:axyra-sheets:1.0.0-Beta-Eval",
+  "skill_sha256": "a426f45e1e5e296fa46ed5604120adfc65251c1cedc003e1ddfe9ef54b182965",
+  "artifacts": {
+    "ai-session-simple/read-prompt.txt": "46fa14c3b2956bd6be712a4db44ed400c928d033c001cd904368c1ee8f688b35",
+    "ai-session-simple/write-prompt.txt": "14e9b0a84294ac37cc10bb4590fd594fe514b7e680d1a3df4588c2bed6fba324",
+    "ai-session-simple/CONTEXT.txt": "8635849b3ad727d28994dd11b0c2b1d38f2ae71e8264a95ad89062fdb32e22d6",
+    "src/main/java/SimpleSkillReader.java": "7048b9e97d3e1c0fb7b513e7b46e246f6784862078aa2f68cda033de166b5ae7",
+    "src/main/java/SimpleSkillWriter.java": "afe4b349c011cf7f6eb6a79b59f8c3c4add074d5f412b6d164be88c3837ad1c3",
+    "src/main/java/VerifySimpleSkill.java": "5e4bd72beef39769aff5ca76c58817df0ff07ed1ceb7a4c2a93a45630b52cdfd",
+    "ai-session-simple/compile-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ai-session-simple/compile-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ai-session-simple/read-stdout.txt": "68853e08a35d0e25f9f1faef61ccabf4380b85a5dad87b708d2f2aaba9fa4bfe",
+    "ai-session-simple/read-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9",
+    "ai-session-simple/write-stdout.txt": "44e272324d7457ea04bf8580568b3b62f81ee91d95c0d6eddf76f871bace04a3",
+    "ai-session-simple/write-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9",
+    "ai-session-simple/verify-stdout.txt": "f71562824a4ee46a81234c838746d90f2b557771211167e6fae395aa91f51fa9",
+    "ai-session-simple/verify-stderr.txt": "a501b6e264a5db991c39cbd333a9f38a89dd3fce1882c41dc1a9d76bacc0f3c9",
+    "ai-session-simple/expected-actual.json": "27ca16ee842f9bd287db25b38b2a6df120669d28ec0a82d80c5afbf038db6481",
+    "input/sales.xlsx": "3a64018a35cbddff69ba832ace40760a88fb6df71464b98f47fda160108b17b2",
+    "expected/ai-sales-simple.xlsx": "13735def6d48fb222525787e117ac31f96771cd4752ddfe3ddf910711d007dfb"
+  },
+  "runs": [
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "compile"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session-simple/compile-stdout.txt",
+      "stderr": "ai-session-simple/compile-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=SimpleSkillReader"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session-simple/read-stdout.txt",
+      "stderr": "ai-session-simple/read-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=SimpleSkillWriter"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session-simple/write-stdout.txt",
+      "stderr": "ai-session-simple/write-stderr.txt"
+    },
+    {
+      "command": [
+        "mvn",
+        "-q",
+        "exec:java",
+        "-Dexec.mainClass=VerifySimpleSkill"
+      ],
+      "exit_code": 0,
+      "stdout": "ai-session-simple/verify-stdout.txt",
+      "stderr": "ai-session-simple/verify-stderr.txt"
+    }
+  ],
+  "input_unchanged": true,
+  "generated_output": "output/ai-sales-simple.xlsx",
+  "bundled_output_copy": "expected/ai-sales-simple.xlsx"
+}

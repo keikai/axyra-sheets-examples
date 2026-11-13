@@ -1,0 +1,11 @@
+Use the Axyra Sheets skill in this Java 17 Maven project with
+io.keikai:axyra-sheets:1.0.0-Beta-Eval. Generate SkillWriteSales.java.
+Create a list of records: (00042, Laptop, 1250), (00043, Mouse, 80).
+Export them to output/ai-sales.xlsx, worksheet Sales, with importData.
+Use headers Order ID, Product, Amount; keep IDs as text and amounts numeric.
+Make the headers bold, format amounts as #,##0.00, and choose readable widths.
+Add a Total row below the records with a SUM formula; derive its row from
+list size, with a zero-total policy for an empty list.
+Compile and run, reopen the XLSX, and verify IDs, numeric amounts,
+header formatting, the stored formula, and the displayed total 1,330.00.
+Keep evaluation notices. Show the output path and actual checked results.

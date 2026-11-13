@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="630" viewBox="0 0 640 630" role="img" aria-labelledby="title desc">
+<title id="title">Read Excel: workbook to Java output</title><desc id="desc">Sales A1:C4 data preview, a Java range read, and the observed console output.</desc>
+<rect width="640" height="630" rx="16" fill="#f4f7fa"/>
+<style>text{font-family:Arial,sans-serif;fill:#18364a}.label{font-size:18px;font-weight:bold}.mono{font-family:monospace;font-size:17px}.small{font-size:14px;fill:#536778}</style>
+<text x="28" y="33" class="label" xml:space="preserve" >1  Excel input · Sales!A1:C4</text>
+<rect x="20" y="47" width="600" height="151" rx="10" fill="white" stroke="#c7d6df"/>
+<rect x="30" y="55" width="580" height="32" rx="4" fill="#e7eff5"/>
+<text x="36" y="76" class="label" xml:space="preserve" >Order ID</text>
+<text x="225" y="76" class="label" xml:space="preserve" >Product</text>
+<text x="425" y="76" class="label" xml:space="preserve" >Amount</text>
+<line x1="30" x2="610" y1="87" y2="87" stroke="#e1e9ee"/>
+<text x="36" y="108" class="mono" xml:space="preserve" >00042</text>
+<text x="225" y="108" class="mono" xml:space="preserve" >Laptop</text>
+<text x="425" y="108" class="mono" xml:space="preserve" >1,250.00</text>
+<line x1="30" x2="610" y1="119" y2="119" stroke="#e1e9ee"/>
+<text x="36" y="140" class="mono" xml:space="preserve" >00043</text>
+<text x="225" y="140" class="mono" xml:space="preserve" >Mouse</text>
+<text x="425" y="140" class="mono" xml:space="preserve" >80.00</text>
+<line x1="30" x2="610" y1="151" y2="151" stroke="#e1e9ee"/>
+<text x="36" y="172" class="mono" xml:space="preserve" >Total</text>
+<text x="225" y="172" class="mono" xml:space="preserve" ></text>
+<text x="425" y="172" class="mono" xml:space="preserve" >1,330.00</text>
+<text x="28" y="232" class="label" xml:space="preserve" >2  Read and print rows in Java</text>
+<rect x="20" y="246" width="600" height="91" rx="10" fill="white" stroke="#c7d6df"/>
+<text x="36" y="277" class="mono" xml:space="preserve" >sheet.range(&quot;A1:C4&quot;).values()</text>
+<text x="36" y="307" class="mono" xml:space="preserve" >for each row → print typed values</text>
+<text x="28" y="374" class="label" xml:space="preserve" >3  Observed Java output</text>
+<rect x="20" y="388" width="600" height="154" rx="10" fill="white" stroke="#c7d6df"/>
+<text x="36" y="420" class="mono" xml:space="preserve" >Order ID    Product     Amount</text>
+<text x="36" y="449" class="mono" xml:space="preserve" >00042       Laptop      1250.0</text>
+<text x="36" y="478" class="mono" xml:space="preserve" >00043       Mouse       80.0</text>
+<text x="36" y="507" class="mono" xml:space="preserve" >Total                   1330.0</text>
+<text x="28" y="576" class="small" xml:space="preserve" >Workbook data preview; not an Excel UI screenshot.</text>
+<text x="28" y="601" class="small" xml:space="preserve" >Evaluation copy. Downloaded workbooks retain their notices.</text>
+</svg>

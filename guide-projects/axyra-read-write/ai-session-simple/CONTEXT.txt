@@ -1,0 +1,17 @@
+New short-prompt run in the active Codex guide-revision conversation.
+
+The assistant read the installed Axyra Sheets skill and had the existing
+axyra-read-write project, its POM, input/sales.xlsx, guides, prior code, and
+previous results in context. Java 17 and Axyra Sheets 1.0.0-Beta-Eval come from
+that project. This is an assisted revision, not a blind or timed trial.
+
+The two displayed prompt files are the exact task specifications recorded for
+this new run. Neither supplies the expected total. The assistant generated
+new SimpleSkillReader.java and SimpleSkillWriter.java implementations for them,
+compiled and ran them, then used VerifySimpleSkill.java for expected/actual
+checks. These outputs are not relabelled logs from the earlier long-prompt run.
+That earlier run remains intact under ai-session/ for history.
+
+The fixture has headers Order ID, Product, Amount, followed by order rows and
+a Total footer. The reader uses that footer as the table boundary. Adapt this
+contract for other workbooks. No evaluation notices were removed.

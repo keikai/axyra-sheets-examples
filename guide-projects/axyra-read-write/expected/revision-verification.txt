@@ -1,0 +1,13 @@
+Observed on Java 17 with Axyra Sheets 1.0.0-Beta-Eval.
+Command: mvn -q compile exec:java -Dexec.mainClass=VerifyRevisions
+
+This is an evaluation copy of Axyra. To obtain a license, visit keikai.io.
+3 rows including the header
+1 rows including the header
+2 rows including the header
+PASS: leading/all/trailing blank TSV fields; escaped TSV controls;
+saved date and numeric formats; null date/amount; empty export headers.
+PASS: JSON LocalDate deserialization and saved date/amount formats.
+Database writeReport tested with Java records; no live JDBC server used.
+
+ReadAllWorksheets was also run against input/sales.xlsx; see all-worksheets-output.tsv.

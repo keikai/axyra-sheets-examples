@@ -1,0 +1,108 @@
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
+import java.nio.file.*;
+import java.util.*;
+
+/** Independent reader: compares the fixture's complete authored region. */
+public final class CompareReports {
+    public static void main(String[] args) throws Exception {
+        List<String> differences = new ArrayList<>();
+        try (var a = new XSSFWorkbook(Files.newInputStream(Path.of("output/poi-sales.xlsx")));
+             var b = new XSSFWorkbook(Files.newInputStream(Path.of("output/axyra-sales.xlsx")))) {
+            XSSFSheet old = a.getSheet("Sales"), migrated = b.getSheet("Sales");
+            equal(differences, "default font", font(a.getFontAt(0)), font(b.getFontAt(0)));
+            Set<String> schemeGaps = new LinkedHashSet<>();
+            compareScheme(differences, schemeGaps, "default font", a.getFontAt(0), b.getFontAt(0));
+            equal(differences, "row height", old.getDefaultRowHeightInPoints(),
+                    migrated.getDefaultRowHeightInPoints());
+            equal(differences, "merged cells", old.getMergedRegions(), migrated.getMergedRegions());
+            equal(differences, "tables", old.getTables().size(), migrated.getTables().size());
+            equal(differences, "freeze rows", old.getPaneInformation().getHorizontalSplitPosition(),
+                    migrated.getPaneInformation().getHorizontalSplitPosition());
+            equal(differences, "freeze cols", old.getPaneInformation().getVerticalSplitPosition(),
+                    migrated.getPaneInformation().getVerticalSplitPosition());
+            for (int c = 0; c < 4; c++) {
+                equal(differences, "column width " + c, old.getColumnWidth(c), migrated.getColumnWidth(c));
+            }
+            for (int r = 0; r < 4; r++) {
+                for (int c = 0; c < 4; c++) {
+                    Cell x = old.getRow(r).getCell(c), y = migrated.getRow(r).getCell(c);
+                    String label = "R" + (r + 1) + "C" + (c + 1);
+                    equal(differences, label + " value/formula/cache", value(x), value(y));
+                    equal(differences, label + " style", style(x), style(y));
+                    if (x != null && y != null && x.getCellType() != CellType.BLANK
+                            && y.getCellType() != CellType.BLANK) {
+                        compareScheme(differences, schemeGaps, label,
+                                ((XSSFCellStyle)x.getCellStyle()).getFont(),
+                                ((XSSFCellStyle)y.getCellStyle()).getFont());
+                    }
+                }
+            }
+            equal(differences, "original sheet names", List.of("Sales"), sheetNames(a));
+            if (!sheetNames(b).contains("Sales")) throw new AssertionError("Missing Sales tab");
+            System.out.println("POI tabs: " + sheetNames(a));
+            System.out.println("Axyra tabs: " + sheetNames(b));
+            System.out.println("Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.");
+            if (!differences.isEmpty()) {
+                differences.forEach(System.out::println);
+                throw new AssertionError(differences.size() + " differences");
+            }
+            System.out.println("PASS: authored values, formulas, formats and other checked styles match.");
+            System.out.println("Expected difference: Axyra evaluation notice tab/rows are retained.");
+            if (!schemeGaps.isEmpty()) {
+                System.out.println("Remaining difference: font scheme MINOR becomes NONE in " + schemeGaps);
+            }
+            System.out.println("Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.");
+        }
+    }
+
+    private static void compareScheme(List<String> differences, Set<String> gaps,
+                                      String label, XSSFFont old, XSSFFont migrated) {
+        if (old.getScheme() == migrated.getScheme()) return;
+        if (old.getScheme() == FontScheme.MINOR && migrated.getScheme() == FontScheme.NONE) {
+            gaps.add(label);
+        } else {
+            differences.add(label + " font scheme: " + old.getScheme() + " -> " + migrated.getScheme());
+        }
+    }
+
+    private static List<String> sheetNames(XSSFWorkbook wb) {
+        List<String> names = new ArrayList<>();
+        for (Sheet s : wb) names.add(s.getSheetName());
+        return names;
+    }
+
+    private static String value(Cell cell) {
+        if (cell == null || cell.getCellType() == CellType.BLANK) return "blank";
+        return switch (cell.getCellType()) {
+            case STRING -> "text:" + cell.getStringCellValue();
+            case NUMERIC -> "number:" + cell.getNumericCellValue();
+            case FORMULA -> "formula:" + cell.getCellFormula() + ":"
+                    + cell.getCachedFormulaResultType() + ":" + cell.getNumericCellValue();
+            default -> throw new AssertionError("Unexpected type " + cell.getCellType());
+        };
+    }
+
+    private static String style(Cell cell) {
+        if (cell == null || cell.getCellType() == CellType.BLANK) return "blank";
+        XSSFCellStyle s = (XSSFCellStyle) cell.getCellStyle();
+        return List.of(s.getDataFormatString(), font(s.getFont()),
+                s.getFillPattern(), s.getAlignment(), s.getVerticalAlignment(),
+                s.getWrapText(), s.getBorderTop(), s.getBorderBottom(),
+                s.getBorderLeft(), s.getBorderRight()).toString();
+    }
+
+    private static String font(XSSFFont f) {
+        XSSFColor color = f.getXSSFColor();
+        String col = color == null || color.isAuto() ? "auto"
+                : color.isThemed() ? "theme:" + color.getTheme()
+                : color.isRGB() ? "rgb:" + color.getARGBHex()
+                : "indexed:" + color.getIndexed();
+        return List.of(f.getFontName(), f.getFontHeightInPoints(), f.getBold(),
+                f.getItalic(), col, f.getFamily()).toString();
+    }
+
+    private static void equal(List<String> differences, String label, Object a, Object b) {
+        if (!Objects.equals(a, b)) differences.add(label + ": " + a + " -> " + b);
+    }
+}

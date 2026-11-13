@@ -1,0 +1,33 @@
+{
+  "reader" : {
+    "actualOrders" : [ {
+      "orderId" : "00042",
+      "product" : "Laptop",
+      "amount" : 1250.0
+    }, {
+      "orderId" : "00043",
+      "product" : "Mouse",
+      "amount" : 80.0
+    } ],
+    "expectedTotal" : 1330.0,
+    "expectedOrders" : [ {
+      "orderId" : "00042",
+      "product" : "Laptop",
+      "amount" : 1250.0
+    }, {
+      "orderId" : "00043",
+      "product" : "Mouse",
+      "amount" : 80.0
+    } ],
+    "actualTotal" : 1330.0
+  },
+  "writer" : {
+    "expectedTotal" : 1330.0,
+    "actualTotal" : 1330.0,
+    "numericAmounts" : true,
+    "displayedTotal" : "1,330.00",
+    "boldHeaders" : true,
+    "formula" : "SUM(C2:C3)",
+    "textIds" : true
+  }
+}

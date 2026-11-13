@@ -1,0 +1,12 @@
+Use the Axyra Sheets skill in this Java 17 Maven project with
+io.keikai:axyra-sheets:1.0.0-Beta-Eval. Generate SkillReadSales.java.
+Read input/sales.xlsx, worksheet Sales. Discover its used range.
+The first row is Order ID, Product, Amount. There are an unknown number
+of order rows, followed by a row labelled Total; stop at that row.
+Preserve text IDs such as 00042, require numeric amounts, skip empty
+rows, and report invalid or error cells instead of replacing them with zero.
+Print each order as Order ID | Product | Amount with two decimal places,
+then print the workbook's Total as Total = 1330.00 for this fixture.
+Use try-with-resources and handle an empty worksheet.
+Compile and run. Report the actual output and anything not verified.
+Keep the input and its evaluation notices intact.

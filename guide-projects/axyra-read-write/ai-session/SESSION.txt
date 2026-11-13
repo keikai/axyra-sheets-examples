@@ -1,0 +1,16 @@
+Recorded AI-assisted example creation
+
+Assistant: Codex, in the active article-revision conversation.
+Skill read: axyra-sheets/SKILL.md (installed skill read by the assistant)
+Library: io.keikai:axyra-sheets:1.0.0-Beta-Eval
+Project: axyra-read-write; Java 17; Maven.
+
+The assistant had the existing guides, example project, and Axyra Sheets skill
+in context. read-prompt.txt and write-prompt.txt specify the two new examples.
+It generated src/main/java/SkillReadSales.java and SkillWriteSales.java in this
+session, then compiled, ran, and checked them. These new files are distinct from
+the earlier ReadExcelFile.java and WriteExcelFile.java reference implementations.
+
+This is a recorded assisted-development session, not an independent blind trial
+or a benchmark. No generation time or advantage over hand coding is claimed.
+See manifest.json for source/prompt hashes, commands, exit codes and log paths.

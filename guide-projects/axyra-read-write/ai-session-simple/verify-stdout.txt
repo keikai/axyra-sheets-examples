@@ -1,0 +1,4 @@
+Reader total: expected 1330.00; actual 1330.00
+Saved total: expected 1330.00; actual 1330.00
+Stored formula: SUM(C2:C3); displayed total: 1,330.00
+PASS: text IDs, Java records, numeric amounts, bold headers, and formats

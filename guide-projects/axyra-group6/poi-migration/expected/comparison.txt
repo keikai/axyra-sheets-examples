@@ -1,0 +1,8 @@
+2026-11-12T01:46:52.158147Z main ERROR Log4j2 could not find a logging implementation. Please add log4j-core to the classpath. Using SimpleLogger to log to the console...
+POI tabs: [Sales]
+Axyra tabs: [Axyra Evaluation Copy, Sales]
+Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.
+PASS: authored values, formulas, formats and other checked styles match.
+Expected difference: Axyra evaluation notice tab/rows are retained.
+Remaining difference: font scheme MINOR becomes NONE in [default font, R2C1, R2C2, R2C3, R2C4, R3C1, R3C2, R3C3, R3C4, R4C1, R4C3, R4C4]
+Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.
