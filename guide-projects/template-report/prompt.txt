@@ -1,5 +1,5 @@
 Use the Axyra Agent Skill to implement a Java 17 report using
-io.keikai:axyra-sheets:1.0.0-Beta-Eval and this project's POM.
+the Axyra Sheets version selected by this project's POM and this project's POM.
  
 Open input/sales-template.xlsx, worksheet Invoice.
 B2 is ${customer} and B3 is ${period}.

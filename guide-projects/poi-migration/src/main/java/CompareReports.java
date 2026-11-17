@@ -44,7 +44,9 @@ public final class CompareReports {
                 }
             }
             equal(differences, "original sheet names", List.of("Sales"), sheetNames(a));
-            if (!sheetNames(b).contains("Sales")) throw new AssertionError("Missing Sales tab");
+            boolean evaluation = sheetNames(b).contains("Axyra Evaluation Copy");
+            equal(differences, "migrated sheet names",
+                    evaluation ? List.of("Axyra Evaluation Copy", "Sales") : List.of("Sales"), sheetNames(b));
             System.out.println("POI tabs: " + sheetNames(a));
             System.out.println("Axyra tabs: " + sheetNames(b));
             System.out.println("Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.");
@@ -52,8 +54,11 @@ public final class CompareReports {
                 differences.forEach(System.out::println);
                 throw new AssertionError(differences.size() + " differences");
             }
-            System.out.println("PASS: authored values, formulas, formats and checked styles match, including font schemes.");
-            System.out.println("Expected difference: Axyra evaluation notice tab/rows are retained.");
+            System.out.println("PASS: values and cell types");
+            System.out.println("PASS: formula text and calculated results");
+            System.out.println("PASS: number formats and checked styles, including font schemes");
+            System.out.println("PASS: checked worksheet structure");
+            if (evaluation) System.out.println("Expected difference: Axyra evaluation notice tab/rows are retained.");
             System.out.println("Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.");
         }
     }

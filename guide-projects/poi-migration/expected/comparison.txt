@@ -1,6 +1,8 @@
 POI tabs: [Sales]
-Axyra tabs: [Axyra Evaluation Copy, Sales]
+Axyra tabs: [Sales]
 Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.
-PASS: authored values, formulas, formats and checked styles match, including font schemes.
-Expected difference: Axyra evaluation notice tab/rows are retained.
+PASS: values and cell types
+PASS: formula text and calculated results
+PASS: number formats and checked styles, including font schemes
+PASS: checked worksheet structure
 Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.

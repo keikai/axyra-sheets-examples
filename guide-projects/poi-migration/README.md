@@ -16,8 +16,8 @@ comparison transcript are in `expected/`.
 
 The fixture uses explicit Calibri 11 fonts without theme-font associations.
 Font schemes are checked strictly; every saved font must have scheme NONE.
-The only expected difference in this comparison is evaluation notice content,
-which is retained. A passing comparison verifies the selected workbook properties
+The licensed non-Eval reference run has matching Sales tabs and no evaluation
+notice content. A passing comparison verifies the selected workbook properties
 and authored cells in this example, not every Apache POI workbook.
 
 ZIP/package metadata, desktop Excel appearance, and PDF output are not compared.
@@ -38,7 +38,17 @@ After generating the workbooks, create article previews with:
 mvn compile exec:java -Dexec.mainClass=RenderGuideFigures
 ```
 
-The PNGs in `expected/` are rendered from the real workbooks using Axyra;
-evaluation notices remain visible. The article versions trim outer whitespace.
+The PNGs in `expected/` are rendered from the real workbooks using licensed
+Axyra Sheets 1.0.0-Beta. The article versions trim outer whitespace.
 These previews do not certify desktop Excel visual equivalence.
-The evaluation renderer also adds a banner when previewing the POI workbook.
+
+## Reference build
+
+The supplied reference outputs were verified using Axyra Sheets `1.0.0-Beta`.
+To select that non-Eval dependency, add `-Pee` to the commands above and configure
+the authenticated `keikai-ee` repository in your Maven settings. If your server
+uses another ID, pass `-Daxyra.ee.repo.id="your-server-id"`.
+
+These examples leave license installation to your application's startup code.
+Without an installed license, they run normally in evaluation mode. See
+[Licensing and Evaluation](https://doc.keikai.io/axyra/dev-ref/License) for setup.

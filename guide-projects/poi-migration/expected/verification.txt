@@ -1,15 +1,25 @@
-Java 17; Axyra 1.0.0-Beta-Eval; POI 5.3.0
+Recorded reference results. License initialization belonged to the authoring/test
+setup and is not included in these standalone report examples. See README.md
+for the current run commands.
 
-$ mvn -q clean compile exec:java -Dexec.mainClass=PoiSalesReport
+Reference build: io.keikai:axyra-sheets:1.0.0-Beta (non-Eval artifact)
+Runtime license state: LICENSED (initialized by the authoring/test setup).
+Java 17; Apache POI 5.3.0.
 
+Exit code: 0
 
-$ mvn -q exec:java -Dexec.mainClass=AxyraSalesReport
+Exit code: 0
 
-
-$ mvn -q exec:java -Dexec.mainClass=CompareReports
+Exit code: 0
 POI tabs: [Sales]
-Axyra tabs: [Axyra Evaluation Copy, Sales]
+Axyra tabs: [Sales]
 Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.
-PASS: authored values, formulas, formats and checked styles match, including font schemes.
-Expected difference: Axyra evaluation notice tab/rows are retained.
+PASS: values and cell types
+PASS: formula text and calculated results
+PASS: number formats and checked styles, including font schemes
+PASS: checked worksheet structure
 Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.
+
+Exit code: 0
+
+All Axyra commands reported LICENSED. Input and output workbooks were generated afresh; no evaluation notices were removed from existing files.

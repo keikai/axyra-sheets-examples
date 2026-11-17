@@ -1,5 +1,5 @@
 Use the Axyra Agent Skill to migrate PoiSalesReport.java to Axyra Sheets
-io.keikai:axyra-sheets:1.0.0-Beta-Eval on Java 17.
+the Axyra Sheets version selected by this project's POM on Java 17.
 The original report uses Apache POI 5.3.0.
  
 Inspect the supplied source, POM, and output/poi-sales.xlsx.

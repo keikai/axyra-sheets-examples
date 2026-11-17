@@ -1,12 +1,20 @@
-Java 17; Axyra 1.0.0-Beta-Eval
+Recorded reference results. License initialization belonged to the authoring/test
+setup and is not included in these standalone report examples. See README.md
+for the current run commands.
 
-$ mvn -q clean compile exec:java -Dexec.mainClass=FillReportTemplate
+Reference build: io.keikai:axyra-sheets:1.0.0-Beta (non-Eval artifact)
+Runtime license state: LICENSED (initialized by the authoring/test setup).
+Java 17; TemplateMarkers reference project.
+
+Exit code: 0
+
+Exit code: 0
 3 lines; total USD 394.00; wrote output/acme-sales.xlsx
 
-$ mvn -q exec:java -Dexec.mainClass=TemplateCases
+Exit code: 0
 PASS: one-row report; empty input rejected
 
-Additional author verification using an independent openpyxl reader:
-PASS: saved values, formulas, D/E formats, copied detail-row fonts/fills/borders/alignment and column widths match the supplied template.
-This supplemental audit is separate from the Java checks in the commands above.
-No desktop Excel or PDF layout certification was performed.
+Exit code: 0
+
+All Axyra commands reported LICENSED. Input and output workbooks were generated afresh; no evaluation notices were removed from existing files.
+Additional independent saved-file audit: expected values, detail formulas, D/E formats, copied fonts/fills/borders/alignment, and column widths passed.
