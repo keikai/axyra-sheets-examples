@@ -48,6 +48,9 @@ public final class FillReportTemplate {
     static void verify(Path output, List<Line> lines) {
         try (Workbook wb = Workbook.open(output)) {
             Sheet sheet = wb.sheet("Invoice");
+            requireText(sheet.cell(1, 1).value(), "Acme Retail");
+            requireText(sheet.cell(2, 1).value(), "2026-10");
+            requireText(sheet.cell(4 + lines.size(), 3).value(), "Total (USD)");
             double total = 0;
             for (int i = 0; i < lines.size(); i++) {
                 int row = 4 + i;
@@ -55,6 +58,12 @@ public final class FillReportTemplate {
                 if (!(sheet.cell(row, 0).value() instanceof CellValue.Text id)
                         || !line.sku().equals(id.value())) {
                     throw new IllegalStateException("Text SKU lost on row " + row);
+                }
+                requireText(sheet.cell(row, 1).value(), line.product());
+                requireNumber(sheet.cell(row, 2).value(), line.qty());
+                requireNumber(sheet.cell(row, 3).value(), line.unitPrice());
+                if (!"#,##0.00".equals(sheet.cell(row, 3).style().numberFormat())) {
+                    throw new IllegalStateException("Unit-price format lost");
                 }
                 requireNumber(sheet.cell(row, 4).value(), line.amount());
                 String expected = "C" + (row + 1) + "*D" + (row + 1);
@@ -74,6 +83,12 @@ public final class FillReportTemplate {
                     }
                 }
             }
+        }
+    }
+
+    private static void requireText(CellValue value, String expected) {
+        if (!(value instanceof CellValue.Text text) || !expected.equals(text.value())) {
+            throw new IllegalStateException("Expected " + expected + ", got " + value);
         }
     }
 

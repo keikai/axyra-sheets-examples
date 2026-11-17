@@ -1,0 +1,12 @@
+Java 17; Axyra 1.0.0-Beta-Eval
+
+$ mvn -q clean compile exec:java -Dexec.mainClass=FillReportTemplate
+3 lines; total USD 394.00; wrote output/acme-sales.xlsx
+
+$ mvn -q exec:java -Dexec.mainClass=TemplateCases
+PASS: one-row report; empty input rejected
+
+Additional author verification using an independent openpyxl reader:
+PASS: saved values, formulas, D/E formats, copied detail-row fonts/fills/borders/alignment and column widths match the supplied template.
+This supplemental audit is separate from the Java checks in the commands above.
+No desktop Excel or PDF layout certification was performed.

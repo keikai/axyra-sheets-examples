@@ -1,0 +1,15 @@
+Java 17; Axyra 1.0.0-Beta-Eval; POI 5.3.0
+
+$ mvn -q clean compile exec:java -Dexec.mainClass=PoiSalesReport
+
+
+$ mvn -q exec:java -Dexec.mainClass=AxyraSalesReport
+
+
+$ mvn -q exec:java -Dexec.mainClass=CompareReports
+POI tabs: [Sales]
+Axyra tabs: [Axyra Evaluation Copy, Sales]
+Sales A1:D4, defaults, widths, freeze panes, merges and tables checked.
+PASS: authored values, formulas, formats and checked styles match, including font schemes.
+Expected difference: Axyra evaluation notice tab/rows are retained.
+Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.

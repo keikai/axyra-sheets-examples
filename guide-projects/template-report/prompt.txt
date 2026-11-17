@@ -1,0 +1,25 @@
+Use the Axyra Agent Skill to implement a Java 17 report using
+io.keikai:axyra-sheets:1.0.0-Beta-Eval and this project's POM.
+ 
+Open input/sales-template.xlsx, worksheet Invoice.
+B2 is ${customer} and B3 is ${period}.
+Row 5 contains ${lines.sku}, ${lines.product}, ${lines.qty},
+${lines.unitPrice}, and the formula C5*D5 in E5.
+E6 contains ${lines.amount:sum}.
+ 
+Use customer Acme Retail and period 2026-10.
+Create Java records for these lines:
+00042 / Keyboard / 2 / 49.50
+00043 / Mouse / 3 / 25.00
+00044 / Monitor / 1 / 220.00
+Derive each amount from quantity times unit price.
+Use template markers to repeat the detail row and preserve its formats.
+Keep SKUs as text. Reject an empty list with a clear message.
+Keep the input template and write output/acme-sales.xlsx.
+ 
+Compile and run the program. Reopen the saved file and check the three
+SKUs, numeric amounts 99/75/220, formulas C5*D5/C6*D6/C7*D7,
+money formats, total 394 in E8, and absence of unresolved markers.
+Also test a one-record list and empty-list rejection.
+Provide runnable source, the commands used, the output path,
+and a list of checks completed, failed, or not run.

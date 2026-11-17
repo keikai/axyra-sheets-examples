@@ -1,0 +1,22 @@
+Use the Axyra Agent Skill to migrate PoiSalesReport.java to Axyra Sheets
+io.keikai:axyra-sheets:1.0.0-Beta-Eval on Java 17.
+The original report uses Apache POI 5.3.0.
+ 
+Inspect the supplied source, POM, and output/poi-sales.xlsx.
+Run the original program and preserve its Sales worksheet, text IDs
+00042 and 00043, dates, numeric values, formulas, and calculated results.
+Preserve the header style, number formats, column widths, default font
+and color, default row height, and frozen first row.
+Keep the tax multiplier and existing rounding behavior unchanged.
+ 
+Explain the mapping from POI operations to Axyra operations.
+Provide runnable replacement source and write output/axyra-sales.xlsx.
+Keep the original source and baseline workbook for comparison.
+Compile and run both implementations with the same input data.
+Use a reader independent of the Axyra writer to compare every authored
+cell in Sales!A1:D4, including types, values, formulas, cached results,
+formats, and styles. Compare defaults and sheet structure as well.
+Identify evaluation notices separately from report differences.
+Report the commands, output paths, differences, and checks not completed.
+Keep POI in this comparison project for the baseline and comparison code.
+Review remaining production usages before suggesting dependency removal.

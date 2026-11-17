@@ -10,9 +10,14 @@ public final class CompareReports {
         try (var a = new XSSFWorkbook(Files.newInputStream(Path.of("output/poi-sales.xlsx")));
              var b = new XSSFWorkbook(Files.newInputStream(Path.of("output/axyra-sales.xlsx")))) {
             XSSFSheet old = a.getSheet("Sales"), migrated = b.getSheet("Sales");
+            for (XSSFWorkbook wb : List.of(a, b)) {
+                for (int i = 0; i < wb.getNumberOfFonts(); i++) {
+                    equal(differences, "explicit font scheme " + i, FontScheme.NONE,
+                            wb.getFontAt(i).getScheme());
+                }
+            }
             equal(differences, "default font", font(a.getFontAt(0)), font(b.getFontAt(0)));
-            Set<String> schemeGaps = new LinkedHashSet<>();
-            compareScheme(differences, schemeGaps, "default font", a.getFontAt(0), b.getFontAt(0));
+            compareScheme(differences, "default font", a.getFontAt(0), b.getFontAt(0));
             equal(differences, "row height", old.getDefaultRowHeightInPoints(),
                     migrated.getDefaultRowHeightInPoints());
             equal(differences, "merged cells", old.getMergedRegions(), migrated.getMergedRegions());
@@ -32,7 +37,7 @@ public final class CompareReports {
                     equal(differences, label + " style", style(x), style(y));
                     if (x != null && y != null && x.getCellType() != CellType.BLANK
                             && y.getCellType() != CellType.BLANK) {
-                        compareScheme(differences, schemeGaps, label,
+                        compareScheme(differences, label,
                                 ((XSSFCellStyle)x.getCellStyle()).getFont(),
                                 ((XSSFCellStyle)y.getCellStyle()).getFont());
                     }
@@ -47,23 +52,15 @@ public final class CompareReports {
                 differences.forEach(System.out::println);
                 throw new AssertionError(differences.size() + " differences");
             }
-            System.out.println("PASS: authored values, formulas, formats and other checked styles match.");
+            System.out.println("PASS: authored values, formulas, formats and checked styles match, including font schemes.");
             System.out.println("Expected difference: Axyra evaluation notice tab/rows are retained.");
-            if (!schemeGaps.isEmpty()) {
-                System.out.println("Remaining difference: font scheme MINOR becomes NONE in " + schemeGaps);
-            }
             System.out.println("Not compared: ZIP bytes, package metadata, desktop Excel layout, PDF output.");
         }
     }
 
-    private static void compareScheme(List<String> differences, Set<String> gaps,
+    private static void compareScheme(List<String> differences,
                                       String label, XSSFFont old, XSSFFont migrated) {
-        if (old.getScheme() == migrated.getScheme()) return;
-        if (old.getScheme() == FontScheme.MINOR && migrated.getScheme() == FontScheme.NONE) {
-            gaps.add(label);
-        } else {
-            differences.add(label + " font scheme: " + old.getScheme() + " -> " + migrated.getScheme());
-        }
+        equal(differences, label + " font scheme", old.getScheme(), migrated.getScheme());
     }
 
     private static List<String> sheetNames(XSSFWorkbook wb) {

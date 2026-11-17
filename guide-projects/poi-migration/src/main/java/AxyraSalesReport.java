@@ -13,7 +13,7 @@ public final class AxyraSalesReport {
             // Match the default font observed in the POI baseline's styles.xml.
             wb.setDefaultFont(wb.defaultStyle().toBuilder()
                     .fontName("Calibri").fontSize(11).fontColor(Color.indexed(8))
-                    .fontScheme("minor").build());
+                    .fontScheme("none").build());
             Sheet sheet = wb.createSheet("Sales");
             sheet.setDefaultRowHeight(15);
             sheet.range("A1:D1").setValues(new CellValue[][] { {

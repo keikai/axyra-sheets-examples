@@ -7,6 +7,8 @@ public final class PoiSalesReport {
     public static void main(String[] args) throws Exception {
         Files.createDirectories(Path.of("output"));
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            // Use explicit fonts without a theme-font association.
+            wb.getFontAt(0).setScheme(FontScheme.NONE);
             Sheet sheet = wb.createSheet("Sales");
             sheet.setDefaultRowHeightInPoints(15);
             String[] labels = {"Order ID", "Date", "Amount", "With Tax"};
@@ -15,6 +17,7 @@ public final class PoiSalesReport {
             bold.setFontName("Calibri");
             bold.setFontHeightInPoints((short) 11);
             bold.setBold(true);
+            ((org.apache.poi.xssf.usermodel.XSSFFont) bold).setScheme(FontScheme.NONE);
             CellStyle headerStyle = wb.createCellStyle();
             headerStyle.setFont(bold);
             CellStyle date = wb.createCellStyle();

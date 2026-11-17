@@ -80,14 +80,16 @@ In Command Prompt (`cmd.exe`), the bash form works with `.\mvnw` in place of
 
 ## Standalone guide projects
 
-The complete article downloads are maintained in [guide-projects/](guide-projects/),
+The complete article examples are maintained in [guide-projects/](guide-projects/),
 with their own POMs, sample inputs, saved outputs, and verification records:
 
 - [Read / Write Excel](guide-projects/axyra-read-write/README.txt): the two landing
   guides, short-prompt AI coding runs, and reproducible expected/actual checks.
 - [Group 5](guide-projects/axyra-group5/README.md): formulas, charts, and formatting.
-- [Group 6](guide-projects/axyra-group6/README.md): template reports and POI migration;
-  each workflow has its own Maven project.
+- [Excel template reports](guide-projects/template-report/README.md): populate an
+  existing Excel template from Java records.
+- [POI migration](guide-projects/poi-migration/README.md): compare a POI sales report
+  with its Axyra replacement.
 
 Run these from the project directory so relative input/output paths resolve:
 
@@ -106,8 +108,9 @@ python3 ../doc/scripts/package-axyra-guide-examples.py
 ```
 
 Run that packaging command from this repository root. It reads `guide-projects/`
-and writes the read/write ZIP to the docs download directory and Group 5/6 ZIPs
-to their draft directories. Use `--groups axyra-read-write` for only that download;
+and writes ZIPs for the Group 5, template-report, and poi-migration projects
+to their respective draft directories. The read/write examples are used directly
+from their folder. Use `--groups template-report` to package only that project;
 `--examples-root` accepts a different guide-project directory.
 
 ## Documentation mapping
