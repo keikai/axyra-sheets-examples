@@ -6,4 +6,10 @@ output/
 
 
 # Generated files at the standalone read/write project root
-/guide-projects/axyra-read-write/*.xlsx
+/java/guide-projects/axyra-read-write/*.xlsx
+
+# .NET build and local verification output
+**/bin/
+**/obj/
+**/__pycache__/
+artifacts/

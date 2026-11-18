@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Axyra.Sheets.Examples</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Axyra.Sheets" Version="$(AxyraSheetsVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The input workbooks the feature demos start from (Java: classpath /feature-demo/). -->
+    <EmbeddedResource Include="Resources\*.xlsx" LogicalName="feature-demo/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

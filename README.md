@@ -1,150 +1,49 @@
 # Axyra Sheets Examples
 
-Axyra Sheets is a server-side Java Excel library for enterprise spreadsheet processing, with modern formulas, charts, pivot tables, and PDF/image rendering. Its AI-friendly API and Axyra Agent Skill help teams build spreadsheet workflows faster.
+Runnable Java and C#/.NET examples for Axyra Sheets, the spreadsheet engine for
+reading, writing, calculating and rendering Excel files without Microsoft Office.
 
-[Website](https://keikai.io/axyra) ． [Quick Start](https://doc.keikai.io/axyra/quick-start/)
+| SDK | Project | Requirements | Documentation |
+|---|---|---|---|
+| Java | [java/](java/) | JDK 17+, included Maven wrapper | [Java docs](https://doc.keikai.io/axyra/) |
+| C# / .NET | [dotnet/](dotnet/) | .NET SDK 8+ and .NET 8 runtime | [.NET docs](https://doc.keikai.io/axyra/dotnet/) |
 
-This repository contains runnable Java examples for the [Axyra Sheets documentation](https://doc.keikai.io/axyra). Package and folder names follow the documentation sections, making it easy to find the complete program behind each snippet.
+Each SDK has 40 examples with matching names: 3 tutorials, 5 guides,
+12 developer-reference examples and 20 feature demos. Build and run from the
+language directory so relative input and output paths resolve correctly.
 
-## Requirements
+## Java
 
-- JDK 17 or later
-- Maven 3.9 or later, or the included Maven wrapper
-
-Maven automatically downloads Axyra Sheets and its required native libraries as configured in pom.xml. The included [evaluation version](https://doc.keikai.io/axyra/dev-ref/License) adds evaluation notices to generated files.
-
-Build and test the examples:
-
-```bash
+```sh
+cd java
 ./mvnw test
-```
-
-Besides the examples, `src/test/java/io/keikai/axyra/examples/regression` checks the library
-itself: one test per feature (`Feature*Test`), the behaviours the documentation states
-(`DocumentedBehaviourTest`) and defects fixed in earlier builds (`FixedIssuesTest`). A test of a
-defect that is still open is tagged `known-issue` and left out of `./mvnw test`, since it fails until
-the defect is fixed; none is open in the build this project uses. Run only those with:
-
-```bash
-./mvnw test -Pknown-issues
-```
-
-## Run examples
-
-List the available examples:
-
-```bash
-./mvnw exec:java
-```
-
-Run one example. Generated files go to `output/` by default:
-
-```bash
 ./mvnw exec:java -Dexec.args="tutorial/quick-start"
-./mvnw exec:java -Dexec.args="guides/create-excel-file output"
 ```
 
-Run every self-contained example:
+## .NET
 
-```bash
-./mvnw exec:java -Dexec.args="all"
+```sh
+cd dotnet
+bash run-tests.sh
+dotnet run --project src/Axyra.Sheets.Examples -- tutorial/quick-start
 ```
 
-`all` covers the documentation examples. The `feature-demo/*` examples, which
-mirror the feature demos on the Axyra demo site, run one at a time: together
-they open, save and render more files than the evaluation build allows in one
-process.
+Run these blocks separately from the repository root. On Windows, use the Java
+wrapper `mvnw.cmd`; the .NET test runner requires Bash (Git Bash or WSL).
+See each language's README for prerequisites, example names and known issues.
+The `all` runner executes the 20 documentation examples; run feature demos
+individually to stay within the evaluation build's per-process limit.
 
-```bash
-./mvnw exec:java -Dexec.args="feature-demo/insert-chart"
-```
+## Repository layout
 
-### Windows PowerShell
+- `java/`: Maven project, resources, tests and standalone article projects in `guide-projects/`.
+- `dotnet/`: .NET solution, embedded resources, tests and Java-to-.NET conversion notes.
 
-The commands above are for bash, zsh, Git Bash and WSL. PowerShell splits an
-unquoted `-Dexec.args=...` at the first dot, and Maven then fails with
-`Unknown lifecycle phase ".args=..."`. Quote the whole `-D` argument and call
-the wrapper as `.\mvnw`:
+Java's Maven version and .NET's NuGet version are selected independently. The
+public examples use evaluation packages, whose output keeps evaluation notices.
+A feature's presence in one SDK does not guarantee identical API shape or output
+in the other; see [conversion notes](dotnet/CONVERSION-NOTES/).
 
-```powershell
-.\mvnw test
-.\mvnw exec:java
-.\mvnw exec:java "-Dexec.args=tutorial/quick-start"
-.\mvnw exec:java "-Dexec.args=guides/create-excel-file output"
-.\mvnw exec:java "-Dexec.args=all"
-.\mvnw exec:java "-Dexec.args=feature-demo/insert-chart"
-```
-
-In Command Prompt (`cmd.exe`), the bash form works with `.\mvnw` in place of
-`./mvnw`, for example `.\mvnw exec:java -Dexec.args="tutorial/quick-start"`.
-
-## Standalone guide projects
-
-The complete article examples are maintained in [guide-projects/](guide-projects/),
-with their own POMs, sample inputs, saved outputs, and verification records:
-
-- [Read / Write Excel](guide-projects/axyra-read-write/README.txt): the two landing
-  guides, short-prompt AI coding runs, and reproducible expected/actual checks.
-- [Group 5](guide-projects/axyra-group5/README.md): formulas, charts, and formatting.
-- [Excel template reports](guide-projects/template-report/README.md): populate an
-  existing Excel template from Java records.
-- [POI migration](guide-projects/poi-migration/README.md): compare a POI sales report
-  with its Axyra replacement.
-
-Run these from the project directory so relative input/output paths resolve:
-
-```bash
-cd guide-projects/axyra-read-write
-mvn -q compile exec:java -Dexec.mainClass=SimpleSkillReader
-mvn -q exec:java -Dexec.mainClass=SimpleSkillWriter
-mvn -q exec:java -Dexec.mainClass=VerifySimpleSkill
-```
-
-The existing root-level runner and tests remain separate from these standalone
-projects. To refresh the guide download ZIPs in a sibling documentation checkout:
-
-```bash
-python3 ../doc/scripts/package-axyra-guide-examples.py
-```
-
-Run that packaging command from this repository root. It reads `guide-projects/`
-and writes ZIPs for the Group 5, template-report, and poi-migration projects
-to their respective draft directories. The read/write examples are used directly
-from their folder. Use `--groups template-report` to package only that project;
-`--examples-root` accepts a different guide-project directory.
-
-## Documentation mapping
-
-| Documentation section | Example name | Source package |
-|---|---|---|
-| Tutorial: Quick Start | `tutorial/quick-start` | `examples.tutorial` |
-| Tutorial: Read and Write | `tutorial/read-write` | `examples.tutorial` |
-| Tutorial: Render | `tutorial/render` | `examples.tutorial` |
-| Guide: Create an Excel File | `guides/create-excel-file` | `examples.guides` |
-| Guide: Read an Excel File | `guides/read-excel-file` | `examples.guides` |
-| Guide: Convert Excel to PDF | `guides/convert-excel-to-pdf` | `examples.guides` |
-| Guide: Write Data to Excel | `guides/write-data-to-excel` | `examples.guides` |
-| Guide: Generate Reports | `guides/generate-report` | `examples.guides` |
-| Developer Reference | `dev-ref/*` | `examples.devref` |
-| Feature demo: Create a new workbook | `feature-demo/create-workbook` | `examples.featuredemo` |
-| Feature demo: Open an existing workbook | `feature-demo/open-workbook` | `examples.featuredemo` |
-| Feature demo: Save and export to file | `feature-demo/save-export` | `examples.featuredemo` |
-| Feature demo: Manage worksheets | `feature-demo/manage-worksheets` | `examples.featuredemo` |
-| Feature demo: Write and read a cell | `feature-demo/cell-read-write` | `examples.featuredemo` |
-| Feature demo: Bulk range read and write | `feature-demo/bulk-range` | `examples.featuredemo` |
-| Feature demo: Formulas and recalculation | `feature-demo/formulas-recalculation` | `examples.featuredemo` |
-| Feature demo: Import Java objects into a sheet | `feature-demo/import-objects` | `examples.featuredemo` |
-| Feature demo: Cell styling | `feature-demo/cell-styling` | `examples.featuredemo` |
-| Feature demo: Number and date formats | `feature-demo/number-formats` | `examples.featuredemo` |
-| Feature demo: Rows and columns | `feature-demo/rows-columns` | `examples.featuredemo` |
-| Feature demo: Merge cells and freeze panes | `feature-demo/merge-freeze` | `examples.featuredemo` |
-| Feature demo: Find and replace | `feature-demo/find-replace` | `examples.featuredemo` |
-| Feature demo: Sort and filter | `feature-demo/sort-filter` | `examples.featuredemo` |
-| Feature demo: Data validation | `feature-demo/data-validation` | `examples.featuredemo` |
-| Feature demo: Conditional formatting | `feature-demo/conditional-format` | `examples.featuredemo` |
-| Feature demo: Create a table | `feature-demo/create-table` | `examples.featuredemo` |
-| Feature demo: Insert a chart | `feature-demo/insert-chart` | `examples.featuredemo` |
-| Feature demo: Export to PDF | `feature-demo/export-pdf` | `examples.featuredemo` |
-| Feature demo: Render to an image | `feature-demo/render-image` | `examples.featuredemo` |
-
-Use try-with-resources to close each `Workbook` and release its native resources, as shown in the examples.
+The Java project previously lived at the repository root. Java source links now
+start with `java/src/`; article projects start with `java/guide-projects/`.
+Each language retains its own resources so it can be used independently.
