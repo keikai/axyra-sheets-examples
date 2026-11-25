@@ -1,5 +1,19 @@
 # Migrate a POI sales report
 
+## Run the manual migration example
+
+Use these programs directly to compare the POI implementation with its Axyra
+replacement. No coding assistant or Agent Skill is required:
+
+- `PoiSalesReport.java` creates the original report with Apache POI.
+- `AxyraSalesReport.java` creates the replacement report with Axyra Sheets.
+- `CompareReports.java` reads both outputs and compares the selected cells and
+  workbook properties.
+
+Keep the input data and business rules the same when adapting the example to
+your own report. Translate the spreadsheet calls, run both implementations,
+and compare the results before replacing the report-generation code.
+
 From this directory, with Java 17+ and Maven:
 
 ```sh

@@ -11,6 +11,7 @@ From this directory, run these in order:
 mvn compile exec:java -Dexec.mainClass=CreateExcelCharts
 mvn exec:java -Dexec.mainClass=UpdateExcelChart
 mvn exec:java -Dexec.mainClass=ExportExcelChart
+mvn exec:java -Dexec.mainClass=ExportChartFormats
 mvn exec:java -Dexec.mainClass=RenderChartPreviews
 ```
 
@@ -19,6 +20,7 @@ mvn exec:java -Dexec.mainClass=RenderChartPreviews
 | `CreateExcelCharts` | `sales-chart.xlsx`, with actual and target series and their worksheet references |
 | `UpdateExcelChart` | `sales-chart-updated.xlsx`, adding Central and extending both series to row 6 |
 | `ExportExcelChart` | `sales-chart.png` and a single landscape `sales-chart.pdf` with the data and chart |
+| `ExportChartFormats` | `output/chart-export/`: a 1200×700 chart PNG, a chart-only PDF, and a report PDF |
 | `RenderChartPreviews` | `output/previews/chart-variants.xlsx` plus column, line, and pie PNGs |
 
 `CreateExcelCharts` must run first; the other programs open `sales-chart.xlsx`.
@@ -50,3 +52,22 @@ license. Microsoft Excel is not required to run the examples.
 
 [Installation](https://doc.keikai.io/axyra/sheets/java/dev-ref/Installation) ·
 [Licensing and evaluation](https://doc.keikai.io/axyra/sheets/java/dev-ref/License)
+
+## Export an existing chart to PNG and PDF
+
+`ExportChartFormats` opens the Sales chart created by `CreateExcelCharts`.
+It writes `sales-chart.png`, `sales-chart-only.pdf`, and `sales-report.pdf` to
+`output/chart-export/`. The chart-only PDF uses print area `E2:N19`; the report
+uses `A1:N19` to include the source table. Both PDF layouts omit data labels for
+readability. The saved source workbook is not overwritten.
+
+The chart-only PDF is a landscape page containing the chart, with the source
+table excluded. The PDF page edges are not cropped to the chart bounds.
+
+To supply another workbook with the same Sales sheet and chart layout:
+
+```sh
+mvn exec:java -Dexec.mainClass=ExportChartFormats -Dexec.args="sales-chart.xlsx output/custom-export"
+```
+
+Reference files for these exports are under `expected/chart-export/`.
