@@ -57,11 +57,12 @@ license. Microsoft Excel is not required to run the examples.
 
 `ExportChartFormats` opens the Sales chart created by `CreateExcelCharts`.
 It writes `sales-chart.png`, `sales-chart-only.pdf`, and `sales-report.pdf` to
-`output/chart-export/`. The chart-only PDF uses print area `E2:N19`; the report
-uses `A1:N19` to include the source table. Both PDF layouts omit data labels for
+`output/chart-export/`. For PDF output, the chart is moved below the source
+table to `A8:H24`. The chart-only PDF uses print area `A8:H24`; the report
+uses `A1:H24` to include the source table. Both PDF layouts omit data labels for
 readability. The saved source workbook is not overwritten.
 
-The chart-only PDF is a landscape page containing the chart, with the source
+The chart-only PDF is a portrait page containing the chart, with the source
 table excluded. The PDF page edges are not cropped to the chart bounds.
 
 To supply another workbook with the same Sales sheet and chart layout:

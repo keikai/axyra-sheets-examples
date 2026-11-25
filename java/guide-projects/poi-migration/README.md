@@ -28,6 +28,23 @@ number formats, fonts, fill patterns, alignment, wrapping, border styles,
 defaults, widths, freeze panes, merges, and tables. Reference files and the
 comparison transcript are in `expected/`.
 
+## Migration preparation checklist
+
+Before changing a larger POI application:
+
+- Choose one report or import/export feature and keep an original output file.
+- List the POI classes it uses. Creating reports with `XSSFWorkbook`, opening
+  templates with `WorkbookFactory`, and streaming with `SXSSFWorkbook` need
+  different approaches. Use Axyra's dedicated streaming APIs for streaming output.
+- Record required cell types, IDs with leading zeros, dates, blanks, formula
+  results, and rounding rules.
+- Record number formats, fonts, fills, borders, alignment, row heights, and
+  column widths that matter to recipients.
+- Include sheet order, merged cells, panes, charts, tables, and print settings
+  when the report uses them.
+- Compare ordinary input and the empty, missing-value, or larger-input cases
+  handled by your application before switching the report-generation code.
+
 The fixture uses explicit Calibri 11 fonts without theme-font associations.
 Font schemes are checked strictly; every saved font must have scheme NONE.
 The licensed non-Eval reference run has matching Sales tabs and no evaluation

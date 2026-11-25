@@ -19,17 +19,19 @@ public final class ExportChartFormats {
             Files.write(output.resolve("sales-chart.png"),
                     sales.renderChartToPng(0, 1200, 700));
 
-            sales.setLandscape(true);
+            // Put the chart below the table so both remain readable on paper.
+            sales.chart(0).setAnchor(7, 0, 23, 7);
+            sales.setLandscape(false);
             sales.fitToPage(1, 1);
             PdfOptions pdf = PdfOptions.builder().sheetNames("Sales").build();
 
             // Include the table and chart in the report page.
             sales.chart(0).setShowDataLabels(false);
-            sales.setPrintArea("A1:N19");
+            sales.setPrintArea("A1:H24");
             workbook.renderPdf(output.resolve("sales-report.pdf"), pdf);
 
             // Print the chart's anchored area while retaining its source cells.
-            sales.setPrintArea("E2:N19");
+            sales.setPrintArea("A8:H24");
             workbook.renderPdf(output.resolve("sales-chart-only.pdf"), pdf);
         }
         System.out.println("Wrote chart PNG and two PDF layouts to " + output);
