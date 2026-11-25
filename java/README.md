@@ -87,7 +87,12 @@ with their own POMs, sample inputs, saved outputs, and verification records:
 
 - [Read / Write Excel](guide-projects/axyra-read-write/README.txt): the two landing
   guides, short-prompt AI coding runs, and reproducible expected/actual checks.
-- [Group 5](guide-projects/axyra-group5/README.md): formulas, charts, and formatting.
+- [Calculate Excel formulas](guide-projects/calculate-formulas/README.md): XLOOKUP,
+  FILTER, UNIQUE, SORT, and automatic recalculation.
+- [Create Excel charts](guide-projects/create-charts/README.md): editable charts,
+  series updates, and PNG/PDF export.
+- [Format Excel cells](guide-projects/format-cells/README.md): reusable styles,
+  number formats, and conditional formatting.
 - [Excel template reports](guide-projects/template-report/README.md): populate an
   existing Excel template from Java records.
 - [POI migration](guide-projects/poi-migration/README.md): compare a POI sales report
