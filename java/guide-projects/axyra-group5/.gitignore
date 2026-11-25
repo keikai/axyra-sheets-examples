@@ -1,4 +1,5 @@
-target/
-output/
-sales-chart.xlsx
-formatted-sales.xlsx
+/target/
+/output/
+/*.xlsx
+/*.png
+/*.pdf

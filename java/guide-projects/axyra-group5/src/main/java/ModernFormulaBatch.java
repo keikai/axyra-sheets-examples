@@ -42,7 +42,7 @@ public final class ModernFormulaBatch {
             requireNumber(sales.cell(1, 4).value(), 100, "Corrected order");
             requireNumber(summary.cell(1, 8).value(), 495, "Corrected revenue");
 
-            // One full refresh at the boundary also covers opened formula caches.
+            // Recalculate once after the edits and before saving the report.
             wb.recalculate();
             summary.setColumnWidth(0, 16);
             summary.setColumnWidth(2, 18);
